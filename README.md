@@ -20,6 +20,7 @@ Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)
 - `lib/` — site config, product and blog content
 
 ## Before launch
+- Contact form (`/api/contact`): set `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` (see `.env.example`). Without them, production returns a friendly error and dev just logs submissions. The in-memory rate limit is per instance; use a shared store if you scale out.
 - Set `NEXT_PUBLIC_SITE_URL` (sitemap, canonical, schema).
 - Set `NEXT_PUBLIC_EXTRACTION_VIDEO` (e.g. `/video/extraction.mp4`) for the Philosophy background loop.
 - Replace placeholder contact details in `lib/site.ts`, and product specs in `lib/products.ts` with verified data.
