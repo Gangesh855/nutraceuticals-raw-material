@@ -1,6 +1,6 @@
-# Verdanta Botanicals — Cinematic Site Concept
+# GK Botanicals — Cinematic Site Concept
 
-Working name: **Verdanta Botanicals** (placeholder). Premium B2B nutraceutical raw-material manufacturer: Moringa, Ashwagandha, Turmeric (Curcumin), Bacopa, Ginger, Boswellia and more.
+Company: **GK Botanicals**. Premium B2B nutraceutical raw-material manufacturer: Moringa, Ashwagandha, Turmeric (Curcumin), Bacopa, Ginger, Boswellia and more.
 
 Stack: Next.js (App Router) · React Three Fiber (+ drei) · TailwindCSS · Framer Motion · GSAP ScrollTrigger · Lenis smooth scroll.
 
@@ -67,13 +67,13 @@ box-shadow: 0 10px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.15);
 │                                                                          │
 │         ━━━━━━━━━━━━━━━━━━━━━━━●─────────  (progress line, vein-tipped)  │
 │                          0 7 3 %   (mono, gold, fades in cinematically)  │
-│                       VERDANTA · PURE BOTANICALS                         │
+│                       GK BOTANICALS · PURE BOTANICALS                         │
 └──────────────────────────────────────────────────────────────────────────┘
       ↓ leaf scales up & becomes the mask (iris reveal) into hero
 
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ 01 HEADER  (fixed, transparent → frosted on scroll)                      │
-│ ◈ VERDANTA   Products▾  Manufacturing  Certifications  Blog  Contact  [Request COA ▸] │
+│ ◈ GK BOTANICALS   Products▾  Manufacturing  Certifications  Blog  Contact  [Request COA ▸] │
 │              └ mega-menu (glass): Categories → Adaptogens · Curcuminoids│
 │                Boswellia · Nootropics · Greens · Custom Extracts        │
 └──────────────────────────────────────────────────────────────────────────┘
