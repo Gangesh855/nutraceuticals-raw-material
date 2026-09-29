@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -34,6 +35,7 @@ export default function Philosophy() {
   return (
     <section ref={root} id="about" className="section overflow-hidden py-40">
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-charcoal-950 via-charcoal-800 to-charcoal-950" aria-hidden />
+      <Image src="/images/ashwagandha.webp" alt="" fill sizes="100vw" className="-z-10 object-cover opacity-[.14] blur-[2px]" />
       {/* Set NEXT_PUBLIC_EXTRACTION_VIDEO (e.g. /video/extraction.mp4) to enable the background video */}
       {process.env.NEXT_PUBLIC_EXTRACTION_VIDEO && (
         <video className="absolute inset-0 -z-10 h-full w-full object-cover opacity-25" src={process.env.NEXT_PUBLIC_EXTRACTION_VIDEO} autoPlay muted loop playsInline preload="none" />

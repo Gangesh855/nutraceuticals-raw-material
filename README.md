@@ -26,3 +26,6 @@ Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)
 - Replace placeholder contact details in `lib/site.ts`, and product specs in `lib/products.ts` with verified data.
 - Replace placeholder certification cards with real certificates (scope, body, validity). Do not publish unverified claims.
 - Replace sample blog copy in `lib/posts.ts`; the hero stats are placeholders too.
+
+## Imagery
+`public/images/*.webp` are crops of a single AI-generated reference image supplied by the client (it carries a "Made with AI" badge in the moringa panel). Replace them with licensed, real photography of your own materials and facility before launch; keep the filenames or update `image` in `lib/products.ts` and `lib/posts.ts`.
