@@ -3,6 +3,8 @@
 Standalone cinematic landing page: **Astro 5 + Tailwind CSS v4 + Three.js + GSAP**.
 The whole page is `src/pages/index.astro` (markup, styles and the three embedded scripts).
 
+**Requires Node 20.3+** (Tailwind v4 and Astro 5). Note this lives in its own folder with its own `package.json` — running `npm run dev` at the repo root starts the separate Next.js site, not this page. From the repo root you can use `npm run astro:install` then `npm run astro:dev`.
+
 ```bash
 cd astro-landing
 npm install
