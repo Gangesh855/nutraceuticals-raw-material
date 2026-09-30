@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "gk-botanicals",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Powers next/image optimisation (AVIF/WebP resizing) through Cloudflare Images.
+  "images": { "binding": "IMAGES" },
+  "observability": { "enabled": true }
+  // Public config can go in "vars". Secrets (RESEND_API_KEY etc.) are set in the dashboard — never commit them.
+}

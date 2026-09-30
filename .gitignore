@@ -8,3 +8,7 @@ next-env.d.ts
 astro-landing/dist
 astro-landing/.astro
 astro-landing/node_modules
+.open-next
+.wrangler
+.dev.vars
+cloudflare-env.d.ts

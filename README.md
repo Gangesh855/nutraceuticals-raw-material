@@ -10,6 +10,8 @@ npm run build && npm start
 npm run lint     # type-check
 ```
 
+Deploy to Cloudflare: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)
+
 Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)
 
 ## Structure
