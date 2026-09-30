@@ -11,8 +11,9 @@ The repo root is configured for Cloudflare Workers with the [OpenNext adapter](h
    - **Worker name:** the name Cloudflare gives the Worker when you import the repo (it defaults to the repo name, `nutraceuticals-raw-material`); it must match `name` in `wrangler.jsonc`. If you rename it in the dashboard, update `wrangler.jsonc` to match.
    - **Production branch:** `main`
    - **Root directory:** `/` (leave blank)
-   - **Build command:** `npx opennextjs-cloudflare build`
-   - **Deploy command:** `npx opennextjs-cloudflare deploy`
+   - **Build command:** leave empty (the site is built automatically at the end of `npm ci` on Workers Builds — see
+     `scripts/cf-ci-build.mjs`), or set `npx opennextjs-cloudflare build` and add build variable `SKIP_CF_INSTALL_BUILD=1`
+   - **Deploy command:** the default `npx wrangler deploy` (it delegates to `opennextjs-cloudflare deploy`)
 4. **Build variables** (Settings → Build → Variables and secrets): `NEXT_PUBLIC_SITE_URL` = your final URL, e.g. `https://www.gkbotanicals.com`
    (used at build time for canonical URLs, sitemap and schema markup).
    Optional: `NEXT_PUBLIC_EXTRACTION_VIDEO`.
@@ -39,10 +40,11 @@ For local secrets create `.dev.vars` (git-ignored) with the same three variables
 - The `astro-landing/` folder is a separate project and is not part of this deployment.
 
 ## Troubleshooting
-- **`ERROR Could not find compiled Open Next config, did you run the build command?`** — the dashboard's *Build command*
-  is empty and *Deploy command* is still the default `npx wrangler deploy`, so the site was never built. Set
-  **Build command** `npx opennextjs-cloudflare build` and **Deploy command** `npx opennextjs-cloudflare deploy`
-  (Settings → Build → Build configuration), then retry the build. Alternatively leave *Build command* empty and set
-  *Deploy command* to `npm run deploy`, which runs the build and deploy together.
+- **`ERROR Could not find compiled Open Next config, did you run the build command?`** — the deploy ran before the
+  site was built. The repo now builds automatically during install on Workers Builds (`postinstall` →
+  `scripts/cf-ci-build.mjs`, triggered by the `WORKERS_CI=1` variable Cloudflare injects), so the default empty
+  *Build command* + `npx wrangler deploy` works. If you still see it, check the build log contains
+  `[cf-ci-build] Workers Builds detected`; if not, set *Build command* to `npx opennextjs-cloudflare build`
+  (Settings → Build → Build configuration).
 - **Worker name mismatch** — `name` in `wrangler.jsonc` must equal the Worker's name in the dashboard
   (here `nutraceuticals-raw-material`).
