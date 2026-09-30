@@ -37,3 +37,12 @@ For local secrets create `.dev.vars` (git-ignored) with the same three variables
 - The contact form's rate limit is in-memory per Worker isolate — best effort. For strict limits use Cloudflare's
   Rate Limiting rules (WAF) or a KV/Durable Object counter.
 - The `astro-landing/` folder is a separate project and is not part of this deployment.
+
+## Troubleshooting
+- **`ERROR Could not find compiled Open Next config, did you run the build command?`** — the dashboard's *Build command*
+  is empty and *Deploy command* is still the default `npx wrangler deploy`, so the site was never built. Set
+  **Build command** `npx opennextjs-cloudflare build` and **Deploy command** `npx opennextjs-cloudflare deploy`
+  (Settings → Build → Build configuration), then retry the build. Alternatively leave *Build command* empty and set
+  *Deploy command* to `npm run deploy`, which runs the build and deploy together.
+- **Worker name mismatch** — `name` in `wrangler.jsonc` must equal the Worker's name in the dashboard
+  (here `nutraceuticals-raw-material`).
