@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -30,15 +31,15 @@ function Card({ p, active, dim, onEnter, onLeave }: { p: Product; active: boolea
           <span key={i} className="absolute h-2 w-2 rounded-full" style={{ left: `${12 + i * 15}%`, bottom: 0, background: p.color, animation: `drift ${2 + i * 0.4}s ease-in infinite alternate` }} />
         ))}
       </div>
+      <Image src={p.image} alt={`${p.name} raw material and extract`} fill sizes="(min-width: 768px) 352px, 304px" style={{ objectPosition: p.imagePos }}
+        className={`pointer-events-none object-cover transition-all duration-700 ease-expo [mask-image:linear-gradient(to_bottom,#000_0%,#000_28%,transparent_52%)] ${active ? "scale-110 opacity-40" : "scale-100 opacity-90"}`} />
       <div className="relative flex h-full flex-col p-7">
         <div className="flex items-start justify-between">
           <span className="eyebrow">{String(PRODUCTS.indexOf(p) + 1).padStart(2, "0")}</span>
           <span className="font-mono text-[10px] text-ivory/50">{p.latin}</span>
         </div>
         <div className="relative my-2 h-40">
-          {active ? <CapsuleScene color={p.color} open /> : (
-            <div className="absolute left-1/2 top-1/2 h-24 w-10 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full" style={{ background: `linear-gradient(to bottom, ${p.color} 50%, #F2E2A6 50%)`, boxShadow: `0 0 40px ${p.color}55` }} />
-          )}
+          {active && <CapsuleScene color={p.color} open />}
         </div>
         <h3 className="font-display text-4xl">{p.name}</h3>
         <p className="mt-2 text-sm text-ivory/60">{p.blurb}</p>

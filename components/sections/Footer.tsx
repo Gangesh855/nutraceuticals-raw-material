@@ -3,6 +3,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
+import ContactForm from "@/components/sections/ContactForm";
 import { PRODUCTS } from "@/lib/products";
 import { POSTS } from "@/lib/posts";
 import { SITE } from "@/lib/site";
@@ -26,7 +27,8 @@ export default function Footer() {
         <motion.h2 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} className="h-display text-[14vw] md:text-[9vw]">
           Let&apos;s grow<br /><span className="italic text-gold-200">something pure.</span>
         </motion.h2>
-        <div className="mt-12"><MagneticButton href={`mailto:${SITE.email}`} variant="gold" className="!px-12 !py-6 !text-sm">Contact us →</MagneticButton></div>
+        <div className="mt-12"><MagneticButton href="#contact-form" variant="gold" className="!px-12 !py-6 !text-sm">Contact us →</MagneticButton></div>
+        <div className="mt-20"><ContactForm /></div>
       </div>
 
       <div className="section mt-32 border-t border-white/10 py-14">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
@@ -44,6 +45,10 @@ export default async function ProductPage({ params }: Params) {
         <h1 className="h-display mt-6 text-6xl md:text-8xl" style={{ textShadow: `0 0 60px ${p.color}55` }}>{p.name}</h1>
         <p className="mt-4 max-w-xl text-lg text-ivory/70">{p.blurb}</p>
         <div className="mt-6 flex flex-wrap gap-2">{p.benefits.map((b) => <span key={b} className="rounded-full border border-white/15 px-3 py-1 text-xs">{b}</span>)}</div>
+        <div className="relative mt-10 h-56 overflow-hidden rounded-2xl border border-white/10 md:h-72">
+          <Image src={p.image} alt={`${p.name} raw material and extract`} fill priority sizes="(min-width: 896px) 896px, 100vw" style={{ objectPosition: p.imagePos }} className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/50 to-transparent" />
+        </div>
         <dl className="glass glow-edge mt-12 divide-y divide-white/10">
           {rows.map(([k, v]) => (
             <div key={k} className="grid grid-cols-2 gap-4 p-5"><dt className="font-mono text-xs uppercase tracking-widest text-ivory/50">{k}</dt><dd className="text-gold-200">{v}</dd></div>
