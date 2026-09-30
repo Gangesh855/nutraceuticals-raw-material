@@ -1,14 +1,14 @@
 # Deploying the Next.js site to Cloudflare (Workers Builds + OpenNext)
 
 The repo root is configured for Cloudflare Workers with the [OpenNext adapter](https://opennext.js.org/cloudflare):
-`wrangler.jsonc` (Worker `gk-botanicals`, static assets, Images binding), `open-next.config.ts`
+`wrangler.jsonc` (Worker `nutraceuticals-raw-material`, static assets, Images binding), `open-next.config.ts`
 (prerendered pages served from the static-assets bundle — no KV/R2 needed).
 
 ## One-time setup (Git integration)
 1. Merge the branch you want to deploy into `main` (or pick that branch in step 3).
 2. Cloudflare dashboard → **Workers & Pages → Create → Import a repository** → choose this GitHub repo.
 3. Settings:
-   - **Worker name:** `gk-botanicals` (must match `name` in `wrangler.jsonc`)
+   - **Worker name:** the name Cloudflare gives the Worker when you import the repo (it defaults to the repo name, `nutraceuticals-raw-material`); it must match `name` in `wrangler.jsonc`. If you rename it in the dashboard, update `wrangler.jsonc` to match.
    - **Production branch:** `main`
    - **Root directory:** `/` (leave blank)
    - **Build command:** `npx opennextjs-cloudflare build`
