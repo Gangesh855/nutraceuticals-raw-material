@@ -93,7 +93,7 @@ export default function Hero() {
   const intro = phase === "intro";
 
   return (
-    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[20.5rem] md:pb-0 md:pt-28"
+    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[22rem] md:pb-0 md:pt-28"
       onPointerMove={(e) => { mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
       <motion.div style={{ x: bgX, y: bgY, scale: 1.04 }} className="absolute inset-0 -z-20">
         <HeroBackdrop slides={SLIDES} index={index} />
@@ -110,7 +110,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>
         {/* Headline stays in the DOM from first paint (crawlable); only its visual reveal is animated */}
-        <h1 className="h-display text-[13vw] md:text-[5.2vw] lg:text-[5.4vw]">
+        <h1 className="h-display text-[10vw] md:text-[5.2vw] lg:text-[5.4vw]">
           {WORDS.map((w, i) => (
             <span key={w}>
               <span className="inline-block overflow-hidden align-bottom pr-[.25em]">
