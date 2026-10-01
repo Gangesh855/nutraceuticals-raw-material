@@ -9,6 +9,7 @@ import HeroBackdrop from "@/components/sections/HeroBackdrop";
 import HeroIntro from "@/components/sections/HeroIntro";
 import HeroCallouts from "@/components/sections/HeroCallouts";
 import { makeSeq } from "@/lib/heroSeq";
+import { webglOK } from "@/components/three/SafeCanvas";
 import { PRODUCTS } from "@/lib/products";
 
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: false });
@@ -26,22 +27,26 @@ export default function Hero() {
   const [reveal, setReveal] = useState(false);
   const [show3d, setShow3d] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [glOk, setGlOk] = useState(false);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [auto, setAuto] = useState(true);
   const tl = useRef<gsap.core.Timeline | null>(null);
   const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
   const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
-  const bgX = useTransform(mx, (v) => v * -16), bgY = useTransform(my, (v) => v * -10);
-  const panelX = useTransform(mx, (v) => v * 14), panelY = useTransform(my, (v) => v * 10);
+  const bgX = useTransform(mx, (v) => v * -10), bgY = useTransform(my, (v) => v * -6);
+  const panelX = useTransform(mx, (v) => v * 8), panelY = useTransform(my, (v) => v * 6);
 
   // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise wait for the preloader.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("gkIntro") === "1";
+    let seen = false;
+    try { seen = sessionStorage.getItem("gkIntro") === "1"; } catch { /* storage blocked: treat as first visit */ }
+    const gl = webglOK(); setGlOk(gl);
+    const noGL = !gl; // the sequence is built around the 3D capsule; without WebGL show the finished hero straight away
     setAuto(!reduce); setMobile(window.matchMedia("(max-width: 767px)").matches);
     const t3d = setTimeout(() => setShow3d(!reduce), 250);
-    if (reduce || seen) {
+    if (reduce || seen || noGL) {
       Object.assign(seq.current, makeSeq(true)); setReveal(true); setPhase("done");
       return () => clearTimeout(t3d);
     }
@@ -57,18 +62,18 @@ export default function Hero() {
     if (phase !== "intro") return;
     const s = seq.current;
     const t = gsap.timeline({
-      onComplete: () => { sessionStorage.setItem("gkIntro", "1"); setPhase("done"); },
+      onComplete: () => { try { sessionStorage.setItem("gkIntro", "1"); } catch { /* ignore */ } setPhase("done"); },
     });
-    t.to(s, { sceneF: 5, duration: 6.25, ease: "none" }, 0)
-      .to(s, { capsuleIn: 1, duration: 1.6, ease: "power2.out" }, 4.9)
-      .to(s, { stream: 1, duration: 1.2, ease: "power1.in" }, 5.4)
-      .to(s, { fill: 1, duration: 4.8, ease: "power1.inOut" }, 5.9)
-      .to(s, { glow: 1, duration: 4.8, ease: "power2.in" }, 5.9)
-      .to(s, { lab: 0, duration: 1.8, ease: "power2.inOut" }, 9.1)
-      .to(s, { veil: 1, duration: 1.8, ease: "power2.inOut" }, 9.1)
-      .call(() => setReveal(true), undefined, 11.0)
-      .to(s, { stream: 0, duration: 0.9, ease: "power1.out" }, 10.0)
-      .to(s, { settle: 1, duration: 1.9, ease: "power3.inOut" }, 9.9);
+    t.to(s, { sceneF: 5, duration: 5.75, ease: "none" }, 0)
+      .to(s, { capsuleIn: 1, duration: 1.8, ease: "power2.out" }, 4.6)
+      .to(s, { stream: 1, duration: 1.4, ease: "power1.inOut" }, 5.0)
+      .to(s, { fill: 1, duration: 4.8, ease: "power2.inOut" }, 5.4)
+      .to(s, { glow: 1, duration: 4.8, ease: "power2.in" }, 5.4)
+      .to(s, { lab: 0, duration: 2.0, ease: "power2.inOut" }, 9.4)
+      .to(s, { veil: 1, duration: 2.0, ease: "power2.inOut" }, 9.4)
+      .call(() => setReveal(true), undefined, 11.4)
+      .to(s, { stream: 0, duration: 1.0, ease: "power1.out" }, 10.0)
+      .to(s, { settle: 1, duration: 2.2, ease: "power3.inOut" }, 10.2);
     tl.current = t;
     if (location.search.includes("seqdebug")) (window as unknown as { __gkTl?: gsap.core.Timeline }).__gkTl = t;
     return () => { t.kill(); };
@@ -88,7 +93,7 @@ export default function Hero() {
   const intro = phase === "intro";
 
   return (
-    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[20.5rem] md:pb-0 md:pt-28"
+    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[22rem] md:pb-0 md:pt-28"
       onPointerMove={(e) => { mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
       <motion.div style={{ x: bgX, y: bgY, scale: 1.04 }} className="absolute inset-0 -z-20">
         <HeroBackdrop slides={SLIDES} index={index} />
@@ -100,18 +105,18 @@ export default function Hero() {
       {/* WebGL: extract streams, the large filling capsule, floating accents */}
       <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>{show3d && <HeroScene seq={seq} mobile={mobile} />}</div>
 
-      <HeroCallouts show={shown} />
+      <HeroCallouts show={shown && glOk && show3d} />
 
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>
         {/* Headline stays in the DOM from first paint (crawlable); only its visual reveal is animated */}
-        <h1 className="h-display text-[13vw] md:text-[7.5vw] lg:text-[5.4vw]">
+        <h1 className="h-display text-[10vw] md:text-[5.2vw] lg:text-[5.4vw]">
           {WORDS.map((w, i) => (
             <span key={w}>
               <span className="inline-block overflow-hidden align-bottom pr-[.25em]">
                 <motion.span className={`inline-block ${i === 2 ? "italic text-gold-200" : ""}`} initial={{ y: "110%" }} animate={{ y: shown ? 0 : "110%" }} transition={{ duration: 1.2, delay: shown ? i * 0.12 : 0, ease: EASE }}>{w}</motion.span>
               </span>{" "}
-              {i === 1 && <br className="hidden lg:block" />}
+              {i === 1 && <br className="hidden md:block" />}
             </span>
           ))}
         </h1>

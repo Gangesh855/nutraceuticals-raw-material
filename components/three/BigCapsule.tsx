@@ -56,10 +56,10 @@ const rampAt = (h: number, out: THREE.Color) => {
 /** Granules and berry-like beads suspended in the capsule; each appears as the fill level passes it. */
 function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const N = 170;
+  const N = 64;
   const data = useMemo(() => Array.from({ length: N }, () => {
     const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 0.34, y = (Math.random() * 2 - 1) * 1.0;
-    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y, s: 0.028 + Math.pow(Math.random(), 2) * 0.075, ph: Math.random() * 6.28 };
+    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y, s: 0.024 + Math.pow(Math.random(), 2) * 0.05, ph: Math.random() * 6.28 };
   }), []);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const col = useMemo(() => new THREE.Color(), []);
@@ -93,15 +93,15 @@ function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
 function OrbitRings({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const g = useRef<THREE.Group>(null);
   const mats = useRef<THREE.PointsMaterial[]>([]);
-  const geos = useMemo(() => [-0.82, 0, 0.82].map((y, k) => {
+  const geos = useMemo(() => [0.05].map((y, k) => {
     const pts: number[] = [], n = 150, a = 1.18 + k * 0.05, b = 0.46;
     for (let i = 0; i < n; i++) { const th = (i / n) * Math.PI * 2; pts.push(Math.cos(th) * a, y, Math.sin(th) * b * 1.6); }
     const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)); return geo;
   }), []);
   useFrame((state) => {
     const s = seq.current, t = state.clock.elapsedTime, vis = Math.max(0, s.settle - 0.3) / 0.7 * s.glow;
-    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.15; }
-    mats.current.forEach((m, i) => { if (m) m.opacity = vis * (0.55 - i * 0.08); });
+    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.08; g.current.rotation.x = 0.5; }
+    mats.current.forEach((m, i) => { if (m) m.opacity = vis * 0.3; });
   });
   return (
     <group ref={g} visible={false}>
@@ -121,13 +121,14 @@ export default function BigCapsule({ seq, mouth }: Props) {
   const { viewport } = useThree();
   const group = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
+  const cap = useRef<THREE.Group>(null); // the top half: floats above while the capsule fills, then lowers to close
   const halo = useRef<THREE.Mesh>(null);
   const light = useRef<THREE.PointLight>(null);
   const pointer = useRef({ x: 0, y: 0 });
 
   const { shellA, shellB, liquid, liqMat, shellMat, haloMat } = useMemo(() => {
     const shellMat = new THREE.MeshPhysicalMaterial({
-      color: "#e8f6ef", transparent: true, opacity: 0.2, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
+      color: "#eef8f2", transparent: true, opacity: 0.3, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
       envMapIntensity: 2.4, depthWrite: false, side: THREE.DoubleSide,
     });
     const liqMat = new THREE.ShaderMaterial({
@@ -146,12 +147,14 @@ export default function BigCapsule({ seq, mouth }: Props) {
   useFrame((state, dt) => {
     const g = group.current, sp = spin.current; if (!g || !sp) return;
     const s = seq.current, t = state.clock.elapsedTime;
+    const k = Math.min(1, Math.max(0, (s.fill - 0.42) / 0.28)); // closes between 42 % and 70 % full
+    if (cap.current) cap.current.position.y = 0.95 * (1 - k * k * (3 - 2 * k));
     pointer.current.x += (state.pointer.x - pointer.current.x) * 0.05;
     pointer.current.y += (state.pointer.y - pointer.current.y) * 0.05;
 
     const narrow = viewport.width / viewport.height < 1.2;
     const e = s.settle * s.settle * (3 - 2 * s.settle);
-    const tx = narrow ? 0 : (0.74 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.235) * viewport.height : (0.5 - 0.4) * viewport.height;
+    const tx = narrow ? 0 : (0.74 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.225) * viewport.height : (0.5 - 0.4) * viewport.height;
     const tScale = narrow ? 0.44 : 0.86, sScale = narrow ? 0.85 : 1.05;
     const pop = 0.82 + 0.18 * s.capsuleIn;
     const sc = (sScale + (tScale - sScale) * e) * pop;
@@ -167,9 +170,9 @@ export default function BigCapsule({ seq, mouth }: Props) {
     const u = liqMat.uniforms;
     u.uBottom.value = bottom; u.uHeight.value = height; u.uLevel.value = bottom + s.fill * height * 1.03 - (s.fill <= 0 ? 1 : 0);
     u.uTime.value = t; u.uGlow.value = s.glow;
-    shellMat.opacity = 0.2 * s.capsuleIn;
+    shellMat.opacity = 0.3 * s.capsuleIn;
     // illumination
-    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.75 * s.capsuleIn; }
+    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn; }
     if (light.current) light.current.intensity = 1 + s.glow * 26;
     mouth.current.set(g.position.x, wy + (CAP_LEN * sc) / 2 + 0.12, 0);
   });
@@ -186,7 +189,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
           <torusGeometry args={[R * 1.035, 0.013, 12, 72]} />
           <meshPhysicalMaterial color="#ffffff" transparent opacity={0.6} roughness={0.08} clearcoat={1} envMapIntensity={2.6} depthWrite={false} />
         </mesh>
-        <mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} />
+        <group ref={cap}><mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} /></group>
         <mesh geometry={shellB} material={shellMat} position={[0, 0.05, 0]} rotation={[Math.PI, 0, 0]} renderOrder={2} />
       </group>
       <OrbitRings seq={seq} />

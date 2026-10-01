@@ -1,14 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import Cursor from "@/components/ui/Cursor";
 import ContactDock from "@/components/ui/ContactDock";
 
-const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-display", display: "swap" });
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// One family throughout: Inter (variable, with italics). Display, body and label styles all derive from it.
+const inter = Inter({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -35,7 +34,7 @@ const orgLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${inter.variable}`}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
         <SmoothScroll>

@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
+import SafeCanvas from "./SafeCanvas";
 import { Environment, Float, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import Particles from "./Particles";
@@ -31,7 +32,7 @@ function Capsule({ color, open }: { color: string; open: boolean }) {
 
 export default function CapsuleScene({ color, open = false }: { color: string; open?: boolean }) {
   return (
-    <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 4], fov: 40 }} gl={{ alpha: true }}>
+    <SafeCanvas dpr={[1, 1.5]} camera={{ position: [0, 0, 4], fov: 40 }} gl={{ alpha: true }}>
       <ambientLight intensity={0.4} />
       <directionalLight position={[3, 3, 3]} intensity={2} />
       <Environment resolution={64}>
@@ -41,6 +42,6 @@ export default function CapsuleScene({ color, open = false }: { color: string; o
       </Environment>
       <Float speed={2} floatIntensity={0.5}><Capsule color={color} open={open} /></Float>
       {open && <Particles count={140} color={color} spread={3} size={0.05} />}
-    </Canvas>
+    </SafeCanvas>
   );
 }
