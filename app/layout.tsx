@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE } from "@/lib/site";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import Cursor from "@/components/ui/Cursor";
+import ContactDock from "@/components/ui/ContactDock";
 
 const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-display", display: "swap" });
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -38,8 +39,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
         <SmoothScroll>
+          <a href="#main" className="sr-only z-[300] rounded-full bg-charcoal-900 px-5 py-3 font-mono text-xs uppercase tracking-widest text-gold-200 focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
           <Cursor />
           {children}
+          <ContactDock />
         </SmoothScroll>
       </body>
     </html>

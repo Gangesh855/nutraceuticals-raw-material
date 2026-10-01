@@ -39,10 +39,10 @@ export default async function ProductPage({ params }: Params) {
   return (
     <>
       <Header />
-      <main className="section mx-auto max-w-4xl pb-32 pt-40">
+      <main id="main" className="section mx-auto max-w-4xl pb-20 pt-32 md:pb-32 md:pt-40">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
         <Link href="/#products" className="eyebrow">← All extracts</Link>
-        <h1 className="h-display mt-6 text-6xl md:text-8xl" style={{ textShadow: `0 0 60px ${p.color}55` }}>{p.name}</h1>
+        <h1 className="h-display mt-6 text-5xl sm:text-6xl md:text-8xl" style={{ textShadow: `0 0 60px ${p.color}55` }}>{p.name}</h1>
         <p className="mt-4 max-w-xl text-lg text-ivory/70">{p.blurb}</p>
         <div className="mt-6 flex flex-wrap gap-2">{p.benefits.map((b) => <span key={b} className="rounded-full border border-white/15 px-3 py-1 text-xs">{b}</span>)}</div>
         <div className="relative mt-10 h-56 overflow-hidden rounded-2xl border border-white/10 md:h-72">

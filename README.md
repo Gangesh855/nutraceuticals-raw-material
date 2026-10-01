@@ -10,6 +10,8 @@ npm run build && npm start
 npm run lint     # type-check
 ```
 
+Hero footage: [`docs/HERO_FOOTAGE.md`](docs/HERO_FOOTAGE.md)
+
 Deploy to Cloudflare: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)
 
 Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)

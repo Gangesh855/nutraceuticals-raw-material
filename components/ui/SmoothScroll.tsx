@@ -13,8 +13,26 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const tick = (t: number) => lenis.raf(t * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
-    return () => { gsap.ticker.remove(tick); lenis.destroy(); };
+
+    // In-page anchors (#products, /#contact …): smooth-scroll with an offset for the fixed header.
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href*='#']");
+      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target === "_blank") return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!el) return;
+      e.preventDefault();
+      lenis.scrollTo(el, { offset: -72, duration: 1.4 });
+      history.pushState(null, "", url.hash);
+    };
+    document.addEventListener("click", onClick);
+
+    return () => {
+      document.removeEventListener("click", onClick);
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+    };
   }, []);
   return <>{children}</>;
 }

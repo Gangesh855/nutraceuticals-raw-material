@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Preloader />
       <Header />
-      <main>
+      <main id="main">
         <Hero />
         <Philosophy />
         <Products />

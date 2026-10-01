@@ -51,7 +51,7 @@ function Card({ p, active, dim, onEnter, onLeave }: { p: Product; active: boolea
             <dt>Marker</dt><dd className="text-gold-200">{p.marker}</dd>
             <dt>Spec</dt><dd className="text-gold-200">{p.spec}</dd>
           </dl>
-          <Link href={`/products/${p.slug}`} className="mt-4 inline-block font-mono text-[11px] uppercase tracking-[.2em] text-emerald-400 hover:text-gold-200">Spec sheet →</Link>
+          <Link href={`/products/${p.slug}`} className="mt-2 inline-block py-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-emerald-400 hover:text-gold-200">Spec sheet →</Link>
         </div>
       </div>
     </div>
@@ -62,6 +62,8 @@ export default function Products() {
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<string | null>(null);
+  const [fine, setFine] = useState(false);
+  useEffect(() => { setFine(window.matchMedia("(hover: hover) and (pointer: fine)").matches); }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -75,14 +77,14 @@ export default function Products() {
   }, []);
 
   return (
-    <section ref={root} id="products" className="relative flex min-h-screen flex-col justify-center overflow-hidden py-24">
+    <section ref={root} id="products" className="relative flex min-h-screen flex-col justify-center overflow-hidden py-20 md:py-24">
       <div className="section mb-10">
         <p className="eyebrow mb-4">02 / The Extract Library</p>
-        <h2 className="h-display text-6xl md:text-7xl">Standardised. <span className="italic text-gold-200">Traceable.</span></h2>
+        <h2 className="h-display text-5xl md:text-7xl">Standardised. <span className="italic text-gold-200">Traceable.</span></h2>
       </div>
       <div ref={track} className="flex snap-x gap-6 overflow-x-auto px-6 pb-6 md:overflow-visible md:px-20 md:snap-none [&::-webkit-scrollbar]:hidden">
         {PRODUCTS.map((p) => (
-          <Card key={p.slug} p={p} active={hover === p.slug} dim={hover !== null && hover !== p.slug} onEnter={() => setHover(p.slug)} onLeave={() => setHover(null)} />
+          <Card key={p.slug} p={p} active={fine && hover === p.slug} dim={fine && hover !== null && hover !== p.slug} onEnter={() => setHover(p.slug)} onLeave={() => setHover(null)} />
         ))}
       </div>
     </section>

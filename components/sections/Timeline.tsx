@@ -41,19 +41,19 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section ref={root} id="manufacturing" className="section relative overflow-hidden py-32">
+    <section ref={root} id="manufacturing" className="section relative overflow-hidden py-20 md:py-32">
       <div className={`absolute inset-0 -z-10 bg-gradient-to-br ${STAGES[active].tone} via-charcoal-950 to-charcoal-950 transition-all duration-1000`} aria-hidden />
       {STAGES.map((st, i) => (
         <Image key={st.t} src={st.img} alt="" fill sizes="100vw" style={{ objectPosition: st.pos }}
           className={`-z-10 object-cover blur-[3px] transition-opacity duration-1000 ${active === i ? "opacity-[.16]" : "opacity-0"}`} />
       ))}
       <p className="eyebrow mb-4">03 / Manufacturing Process</p>
-      <h2 className="h-display mb-24 text-6xl md:text-7xl">From field to <span className="italic text-gold-200">drum.</span></h2>
+      <h2 className="h-display mb-14 text-5xl md:mb-24 md:text-7xl">From field to <span className="italic text-gold-200">drum.</span></h2>
       <div className="tl-list relative mx-auto max-w-5xl">
         <div className="absolute left-5 top-0 h-full w-px bg-white/10 md:left-1/2" />
         <div ref={line} className="absolute left-5 top-0 h-full w-px bg-gradient-to-b from-emerald-400 to-gold-400 shadow-glow md:left-1/2" />
         {STAGES.map((s, i) => (
-          <div key={s.t} className={`tl-item relative mb-32 flex last:mb-0 md:w-1/2 ${i % 2 ? "md:ml-auto md:pl-16" : "md:pr-16 md:text-right"} pl-16 md:pl-0`}>
+          <div key={s.t} className={`tl-item relative mb-14 flex md:mb-32 last:mb-0 md:w-1/2 ${i % 2 ? "md:ml-auto md:pl-16" : "md:pr-16 md:text-right"} pl-16 md:pl-0`}>
             <span className={`absolute left-5 top-6 h-4 w-4 -translate-x-1/2 rounded-full border-2 transition-all duration-700 md:left-auto ${i % 2 ? "md:-left-0 md:-translate-x-1/2" : "md:right-0 md:translate-x-1/2"} ${active >= i ? "border-gold-400 bg-emerald-400 shadow-glow scale-125" : "border-white/30 bg-charcoal-900"}`} />
             <div className={`glass glow-edge w-full p-8 transition-opacity duration-700 ${active === i ? "opacity-100" : "opacity-40"}`}>
               <div className="relative mb-5 h-28 overflow-hidden rounded-xl">

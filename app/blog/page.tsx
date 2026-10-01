@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndex() {
-  return (<><Header /><main className="pt-28"><Blog /></main><Footer /></>);
+  return (<><Header /><main id="main" className="pt-28"><Blog /></main><Footer /></>);
 }
