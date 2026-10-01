@@ -88,7 +88,7 @@ export default function Hero() {
   const intro = phase === "intro";
 
   return (
-    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[19rem] md:pb-0 md:pt-28"
+    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[20.5rem] md:pb-0 md:pt-28"
       onPointerMove={(e) => { mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
       <motion.div style={{ x: bgX, y: bgY, scale: 1.04 }} className="absolute inset-0 -z-20">
         <HeroBackdrop slides={SLIDES} index={index} />
@@ -105,12 +105,13 @@ export default function Hero() {
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>
         {/* Headline stays in the DOM from first paint (crawlable); only its visual reveal is animated */}
-        <h1 className="h-display text-[13vw] md:text-[7.5vw] lg:text-[6.6vw]">
+        <h1 className="h-display text-[13vw] md:text-[7.5vw] lg:text-[5.4vw]">
           {WORDS.map((w, i) => (
             <span key={w}>
               <span className="inline-block overflow-hidden align-bottom pr-[.25em]">
                 <motion.span className={`inline-block ${i === 2 ? "italic text-gold-200" : ""}`} initial={{ y: "110%" }} animate={{ y: shown ? 0 : "110%" }} transition={{ duration: 1.2, delay: shown ? i * 0.12 : 0, ease: EASE }}>{w}</motion.span>
               </span>{" "}
+              {i === 1 && <br className="hidden lg:block" />}
             </span>
           ))}
         </h1>
@@ -129,18 +130,17 @@ export default function Hero() {
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 30 }} transition={{ delay: shown ? 1.2 : 0, duration: 1.1 }}
         onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}
         aria-label="Featured botanical"
-        className={`glass glow-edge absolute bottom-10 right-6 z-30 hidden w-[21rem] p-6 lg:block xl:right-20 ${shown ? "" : "pointer-events-none"}`}
+        className={`glass glow-edge absolute bottom-10 right-6 z-30 hidden w-[21rem] p-5 lg:block xl:right-20 ${shown ? "" : "pointer-events-none"}`}
       >
         <p className="eyebrow">Now featuring</p>
         <AnimatePresence mode="wait">
           <motion.div key={cur.slug} initial={{ opacity: 0, y: 12, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -8, filter: "blur(6px)" }} transition={{ duration: 0.5 }}>
-            <h2 className="mt-2 font-display text-4xl leading-none">{cur.name}</h2>
-            <p className="mt-1.5 font-mono text-[10px] italic text-ivory/55">{cur.latin}</p>
-            <dl className="mt-4 space-y-1.5 font-mono text-[11px]">
+            <h2 className="mt-1.5 font-display text-3xl leading-none">{cur.name}</h2>
+                        <dl className="mt-3 space-y-1 font-mono text-[11px]">
               <div className="flex justify-between gap-4"><dt className="text-ivory/50">Marker</dt><dd className="text-right text-gold-200">{cur.marker}</dd></div>
               <div className="flex justify-between gap-4"><dt className="text-ivory/50">Spec</dt><dd className="text-right text-gold-200">{cur.spec}</dd></div>
             </dl>
-            <Link href={`/products/${cur.slug}`} className="mt-4 inline-block py-2 font-mono text-[11px] uppercase tracking-[.2em] text-emerald-400 transition-colors hover:text-gold-200">View spec sheet →</Link>
+            <Link href={`/products/${cur.slug}`} className="mt-2 inline-block py-2 font-mono text-[11px] uppercase tracking-[.2em] text-emerald-400 transition-colors hover:text-gold-200">View spec sheet →</Link>
           </motion.div>
         </AnimatePresence>
         <div className="mt-1 flex gap-1.5" role="tablist" aria-label="Choose botanical">
