@@ -72,7 +72,7 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
       {/* lab-like grade: cool tint, vignette, faint grid */}
       <div className="absolute inset-0 bg-[radial-gradient(75%_65%_at_50%_50%,transparent_35%,rgba(3,8,10,.78)_100%),linear-gradient(180deg,rgba(120,170,190,.10),rgba(5,12,14,.35))]" />
       <IntroFX seq={seq} />
-      <div ref={cap} className="absolute bottom-8 left-6 font-mono text-[11px] uppercase tracking-[.25em] text-ivory/75 md:left-12 lg:left-20" />
+      <div ref={cap} className="absolute bottom-8 left-24 font-mono text-[11px] uppercase tracking-[.25em] text-ivory/75 md:left-28" />
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-white/10"><span ref={bar} className="block h-full origin-left bg-gold-400" style={{ transform: "scaleX(0)" }} /></span>
       {/* frosted-glass transition between the lab and the final hero */}
       <div ref={veil} className="absolute inset-0 bg-charcoal-950/30 backdrop-blur-md" style={{ opacity: 0, display: "none" }} />

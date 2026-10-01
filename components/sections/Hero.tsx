@@ -64,11 +64,11 @@ export default function Hero() {
       .to(s, { stream: 1, duration: 1.2, ease: "power1.in" }, 5.4)
       .to(s, { fill: 1, duration: 4.8, ease: "power1.inOut" }, 5.9)
       .to(s, { glow: 1, duration: 4.8, ease: "power2.in" }, 5.9)
-      .to(s, { lab: 0, duration: 1.8, ease: "power2.inOut" }, 9.2)
-      .to(s, { veil: 1, duration: 1.8, ease: "power2.inOut" }, 9.2)
-      .call(() => setReveal(true), undefined, 10.0)
-      .to(s, { stream: 0, duration: 0.9, ease: "power1.out" }, 10.4)
-      .to(s, { settle: 1, duration: 1.8, ease: "power3.inOut" }, 10.6);
+      .to(s, { lab: 0, duration: 1.8, ease: "power2.inOut" }, 9.1)
+      .to(s, { veil: 1, duration: 1.8, ease: "power2.inOut" }, 9.1)
+      .call(() => setReveal(true), undefined, 11.0)
+      .to(s, { stream: 0, duration: 0.9, ease: "power1.out" }, 10.0)
+      .to(s, { settle: 1, duration: 1.9, ease: "power3.inOut" }, 9.9);
     tl.current = t;
     if (location.search.includes("seqdebug")) (window as unknown as { __gkTl?: gsap.core.Timeline }).__gkTl = t;
     return () => { t.kill(); };

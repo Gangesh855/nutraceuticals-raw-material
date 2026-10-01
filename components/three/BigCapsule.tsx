@@ -33,7 +33,7 @@ const LIQ_FRAG = /* glsl */ `
     vec3 V = normalize(cameraPosition - vW);
     float fres = pow(1.-abs(dot(normalize(vN),V)),2.2);
     float surf = smoothstep(.07,0.,lvl - vW.y);
-    vec3 outc = col*.75 + col*(.35+uGlow*1.35)*.55 + fres*vec3(1.,.93,.7)*(.35+uGlow*.6) + surf*vec3(1.,.95,.75)*.9;
+    vec3 outc = col*.82 + col*(.3+uGlow*.75)*.45 + fres*vec3(1.,.93,.7)*(.3+uGlow*.4) + surf*vec3(1.,.95,.75)*.8;
     gl_FragColor = vec4(outc, .94);
   }
 `;
