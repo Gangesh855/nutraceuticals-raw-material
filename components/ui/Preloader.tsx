@@ -24,7 +24,12 @@ export default function Preloader() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("load", onLoad); };
   }, []);
 
-  useEffect(() => { if (done) document.documentElement.style.overflow = ""; }, [done]);
+  useEffect(() => {
+    if (!done) return;
+    document.documentElement.style.overflow = "";
+    (window as unknown as { __gkReady?: boolean }).__gkReady = true;
+    window.dispatchEvent(new Event("gk:ready")); // tells the hero it can start its opening sequence
+  }, [done]);
 
   return (
     <AnimatePresence>

@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 
 /** Half of a two-piece capsule: open end at y=0, straight wall, hemispherical cap. */
-function halfCapsule(r: number, h: number) {
+export function halfCapsule(r: number, h: number) {
   const pts: THREE.Vector2[] = [new THREE.Vector2(r, 0), new THREE.Vector2(r, h)];
   const N = 14;
   for (let i = 1; i <= N; i++) {

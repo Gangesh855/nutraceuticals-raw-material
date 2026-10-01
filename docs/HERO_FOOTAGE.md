@@ -39,3 +39,23 @@ Make the loop seamless in your editor by cross-dissolving the last ~1 s of the c
 ## Sourcing & licensing
 Use footage you shot, commissioned, or licensed for commercial web use (check the licence for modification and for use as a website
 background). Don't use footage of another company's facility or products. Credit/licence terms should be stored alongside the files.
+
+
+## Opening sequence clips (optional)
+The hero opens with a ~12 s sequence: five close-ups of materials being processed → extract streams flow into a large capsule that
+fills and glows → the lab look dissolves into the glass hero. It plays once per browser session (a "Skip intro" button is always shown;
+it is skipped entirely for reduced-motion users). The close-ups are still photographs with procedural extraction effects (powder grinding,
+golden powder pouring, droplets condensing, oil separating, liquid filtering through glass tubes).
+
+To use real footage for the close-ups, add `public/video/intro-<slug>.mp4` (+ optional `.webm`) for these slugs and keep
+`NEXT_PUBLIC_HERO_VIDEO=1` set:
+
+| Slug | Close-up (≈1.25 s each on screen; shoot 6–8 s) |
+|---|---|
+| `intro-moringa` | Moringa leaf / powder being ground |
+| `intro-turmeric` | Turmeric root milling; golden powder pouring |
+| `intro-ginger` | Ginger slices with condensation on glass |
+| `intro-bacopa` | Bacopa extract separating into oil and water layers |
+| `intro-boswellia` | Boswellia resin; golden liquid filtering through glass tubes |
+
+Footage plays under the 2D effects layer, so keep it moody and slightly desaturated; the effects add glow and motion on top.
