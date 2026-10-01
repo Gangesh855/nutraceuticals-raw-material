@@ -5,9 +5,9 @@ import { POSTS } from "@/lib/posts";
 
 export default function Blog() {
   return (
-    <section id="blog" className="section py-32">
+    <section id="blog" className="section py-20 md:py-32">
       <Reveal><p className="eyebrow mb-4">05 / Insights</p></Reveal>
-      <Reveal as="h2" className="h-display mb-14 text-6xl md:text-7xl">Botanical <span className="italic text-gold-200">intelligence.</span></Reveal>
+      <Reveal as="h2" className="h-display mb-10 text-5xl md:mb-14 md:text-7xl">Botanical <span className="italic text-gold-200">intelligence.</span></Reveal>
       <div className="grid gap-6 md:grid-cols-3">
         {POSTS.map((p, i) => (
           <Reveal key={p.slug} delay={i * 0.1} className={i === 0 ? "md:col-span-2" : ""}>

@@ -4,7 +4,9 @@
 
 :root { --ease: cubic-bezier(.22,1,.36,1); }
 
-html { background: #0A0D0C; }
+html { background: #0A0D0C; scroll-padding-top: 5rem; -webkit-text-size-adjust: 100%; }
+:focus-visible { outline: 2px solid #D4AF37; outline-offset: 3px; }
+button, a { -webkit-tap-highlight-color: transparent; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 

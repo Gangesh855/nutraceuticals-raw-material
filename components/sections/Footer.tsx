@@ -19,7 +19,7 @@ const SOCIAL = [
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative overflow-hidden pt-40">
+    <footer id="contact" className="relative overflow-hidden pt-24 md:pt-40">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_100%,rgba(16,185,129,.25),transparent)]" aria-hidden />
       <div className="absolute inset-0 -z-10 opacity-70" aria-hidden><FooterScene /></div>
       <div className="section text-center">
@@ -28,33 +28,33 @@ export default function Footer() {
           Let&apos;s grow<br /><span className="italic text-gold-200">something pure.</span>
         </motion.h2>
         <div className="mt-12"><MagneticButton href="#contact-form" variant="gold" className="!px-12 !py-6 !text-sm">Contact us →</MagneticButton></div>
-        <div className="mt-20"><ContactForm /></div>
+        <div className="mt-12 md:mt-20"><ContactForm /></div>
       </div>
 
-      <div className="section mt-32 border-t border-white/10 py-14">
+      <div className="section mt-16 border-t border-white/10 py-12 md:mt-32 md:py-14">
         <nav aria-label="Sitemap" className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="eyebrow mb-4">Products</h3>
-            <ul className="space-y-2 text-sm text-ivory/70">{PRODUCTS.map((p) => <li key={p.slug}><Link className="hover:text-emerald-400" href={`/products/${p.slug}`}>{p.name}</Link></li>)}</ul>
+            <ul className="space-y-0.5 text-sm text-ivory/70">{PRODUCTS.map((p) => <li key={p.slug}><Link className="inline-block py-1.5 hover:text-emerald-400" href={`/products/${p.slug}`}>{p.name}</Link></li>)}</ul>
           </div>
           <div>
             <h3 className="eyebrow mb-4">Company</h3>
-            <ul className="space-y-2 text-sm text-ivory/70">
-              <li><Link className="hover:text-emerald-400" href="/#about">About</Link></li>
-              <li><Link className="hover:text-emerald-400" href="/#manufacturing">Manufacturing</Link></li>
-              <li><Link className="hover:text-emerald-400" href="/#certifications">Certifications</Link></li>
+            <ul className="space-y-0.5 text-sm text-ivory/70">
+              <li><Link className="inline-block py-1.5 hover:text-emerald-400" href="/#about">About</Link></li>
+              <li><Link className="inline-block py-1.5 hover:text-emerald-400" href="/#manufacturing">Manufacturing</Link></li>
+              <li><Link className="inline-block py-1.5 hover:text-emerald-400" href="/#certifications">Certifications</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="eyebrow mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm text-ivory/70">
-              <li><Link className="hover:text-emerald-400" href="/blog">Blog</Link></li>
-              {POSTS.map((p) => <li key={p.slug}><Link className="hover:text-emerald-400" href={`/blog/${p.slug}`}>{p.title.split(":")[0]}</Link></li>)}
+            <ul className="space-y-0.5 text-sm text-ivory/70">
+              <li><Link className="inline-block py-1.5 hover:text-emerald-400" href="/blog">Blog</Link></li>
+              {POSTS.map((p) => <li key={p.slug}><Link className="inline-block py-1.5 hover:text-emerald-400" href={`/blog/${p.slug}`}>{p.title.split(":")[0]}</Link></li>)}
             </ul>
           </div>
           <div>
             <h3 className="eyebrow mb-4">Contact</h3>
-            <p className="text-sm text-ivory/70"><a className="hover:text-emerald-400" href={`mailto:${SITE.email}`}>{SITE.email}</a><br />{SITE.phone}</p>
+            <p className="text-sm text-ivory/70"><a className="inline-block py-1.5 hover:text-emerald-400" href={`mailto:${SITE.email}`}>{SITE.email}</a><br />{SITE.phone}</p>
             <div className="mt-6 flex gap-3">
               {SOCIAL.map((s) => (
                 <motion.a key={s.n} href="#" aria-label={s.n} whileHover={{ y: -6, scale: 1.1 }} className="glass grid h-11 w-11 place-items-center text-ivory/70 transition-colors hover:text-gold-200 hover:shadow-gold">

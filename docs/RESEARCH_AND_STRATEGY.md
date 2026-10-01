@@ -63,7 +63,26 @@ Sources: [home](https://www.ingexbotanicals.com/), [about](https://www.ingexbota
 | Information architecture | Dedicated pages for About, **Factory**, **Certifications**, Key Products, Product Category, Contact. |
 | SEO | **Country/intent landing pages** ("Herbal Extract Manufacturers in Australia", "…Supplier in China"), keyword-rich page titles ("Ashwagandha Extract Manufacturer in India"). |
 | CTAs | Enquiry email + phone published prominently; contact page. (Form/CTA mechanics not verified.) |
-| **To verify** | Hero, visual language, motion, photography, copy tone, spec-sheet/COA download flow, sample-request flow, mobile UX. |
+| **To verify** | Motion, spec-sheet/COA download flow, sample-request flow, mobile UX, inner pages (see screenshot observations below for the home page). |
+
+
+### Ingex Botanicals — visual observations from client-supplied screenshots (home page, desktop)
+Reviewed from three screenshots supplied by the client (the live site itself is still unreachable from the build environment).
+
+| Area | Observation |
+|---|---|
+| Palette & theme | **Light/white** pages with a single deep green accent (buttons, nav active state, hero headline on the intro panel). The opposite of our dark/gold direction — a deliberate point of differentiation. |
+| Typography | Tall **condensed sans-serif** headlines (all caps for the sub-headline), plain sans body copy. Functional, not editorial. |
+| Hero | Full-bleed **blurred fern photograph** with a white left-aligned headline ("Science-Driven Botanical Extracts for Next-Generation Nutraceuticals"), an all-caps tagline, and a dark translucent text panel carrying the company description and capacity claim. |
+| Story section | Two-column split: logo + "Our Story" + two paragraphs + a single green "Discover More" button on the left; capsule-in-bowl photo with the headline "Next Generation Ingredients" on the right. |
+| Product tiles | Row of white cards, each with a **circular crop photo**, "<Botanical> Extracts" label, and a solid green button carrying the company's **branded ingredient name**. Grid is flat and uniform. |
+| Navigation | Five items: Home · About · Products · News and Blogs · Contact. |
+| Quick contact | Floating **WhatsApp and phone buttons** (bottom-left) and a chat-widget button (bottom-right) on every screen. |
+| Copy | Capability claims (capacity, certifications) stated in running paragraphs rather than as scannable proof elements. |
+
+**What we adopted:** the floating WhatsApp/call dock; a short, scannable nav; clear single-purpose CTAs.
+**What we deliberately did not copy:** their imagery, copy, product/brand names or colour system.
+**Opportunities they leave open:** proof is buried in paragraphs (we can surface it as stats/certificate cards); products are presented as images + brand names with no spec data on the tile (we show marker compounds and specs on hover); visual experience is static (we have motion and 3D).
 
 ### Others (from one search result each; not visited)
 | Company | Positioning per search listing |

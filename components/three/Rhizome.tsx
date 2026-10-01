@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 function lumpy(geo: THREE.BufferGeometry, amp: number, seed: number) {
@@ -24,10 +24,14 @@ const FINGERS: { pos: [number, number, number]; rot: [number, number, number]; l
   { pos: [-1.0, -0.45, 0], rot: [0, 0.2, 0.5], len: 0.8, r: 0.25 },
 ];
 
-const BASE_X = 1.9;
-
 export default function Rhizome() {
   const group = useRef<THREE.Group>(null);
+  const { viewport } = useThree();
+  // Wide screens: sit to the right of the headline. Narrow/portrait: centre, lower and smaller so it never clips or covers copy.
+  const narrow = viewport.width / viewport.height < 1.2;
+  const BASE_X = narrow ? 0 : viewport.width * 0.27;
+  const BASE_Y = narrow ? -viewport.height * 0.36 : 0;
+  const SCALE = narrow ? 0.45 : 0.8;
   const geos = useMemo(() => FINGERS.map((f, i) => lumpy(new THREE.CapsuleGeometry(f.r, f.len, 12, 32), 0.12, i * 1.7)), []);
   const rings = useMemo(() => new THREE.TorusGeometry(1, 0.008, 6, 48), []);
 
@@ -36,11 +40,11 @@ export default function Rhizome() {
     g.rotation.y += dt * 0.25;
     g.rotation.x += ((state.pointer.y * 0.3) - g.rotation.x) * 0.05;
     g.position.x += ((BASE_X + state.pointer.x * 0.4) - g.position.x) * 0.05;
-    g.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.08;
+    g.position.y += ((BASE_Y + Math.sin(state.clock.elapsedTime * 0.8) * 0.08) - g.position.y) * 0.1;
   });
 
   return (
-    <group ref={group} scale={0.8} position={[BASE_X, 0, 0]}>
+    <group ref={group} scale={SCALE} position={[BASE_X, BASE_Y, 0]}>
       {FINGERS.map((f, i) => (
         <mesh key={i} geometry={geos[i]} position={f.pos} rotation={f.rot}>
           <meshPhysicalMaterial color="#D9861A" roughness={0.55} metalness={0.05} clearcoat={0.2} emissive="#5a2d00" emissiveIntensity={0.35} />

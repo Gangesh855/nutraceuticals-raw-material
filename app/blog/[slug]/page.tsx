@@ -40,12 +40,12 @@ export default async function Post({ params }: Params) {
   return (
     <>
       <Header />
-      <main className="section mx-auto max-w-3xl pb-32 pt-40">
+      <main id="main" className="section mx-auto max-w-3xl pb-20 pt-32 md:pb-32 md:pt-40">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
         <nav aria-label="Breadcrumb" className="eyebrow mb-8"><Link href="/blog">← Blog</Link></nav>
         <article>
           <span className="eyebrow">{post.category}</span>
-          <h1 className="h-display mt-4 text-5xl md:text-6xl">{post.title}</h1>
+          <h1 className="h-display mt-4 text-4xl sm:text-5xl md:text-6xl">{post.title}</h1>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-ivory/40"><time dateTime={post.date}>{post.date}</time> · {post.readMins} min read</p>
           <div className="mt-12 space-y-6 text-lg leading-relaxed text-ivory/80">{post.body.map((b, i) => <p key={i}>{b}</p>)}</div>
         </article>

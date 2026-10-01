@@ -24,14 +24,14 @@ function CertCard({ c }: { c: (typeof CERTS)[number] }) {
   const leave = () => { const el = ref.current!; el.style.transform = ""; el.style.setProperty("--holo", "0"); };
   return (
     <div ref={ref} onPointerMove={move} onPointerLeave={leave} data-cursor="view"
-      className="glass glow-edge relative overflow-hidden p-8 transition-transform duration-300 ease-out [transform-style:preserve-3d]">
+      className="glass glow-edge relative overflow-hidden p-5 transition-transform sm:p-8 duration-300 ease-out [transform-style:preserve-3d]">
       <div className="pointer-events-none absolute inset-0 mix-blend-color-dodge transition-opacity duration-500"
         style={{ opacity: "calc(var(--holo,0) * .35)", background: "conic-gradient(from var(--hue,0deg) at var(--mx,50%) var(--my,50%), #ff6ec7, #ffd86e, #6effc5, #6ec7ff, #c76eff, #ff6ec7)" }} />
       <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500" style={{ opacity: "var(--holo,0)", background: "radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.18), transparent 60%)" }} />
-      <div className="relative [transform:translateZ(50px)]">
-        <div className="mb-6 grid h-20 w-20 place-items-center rounded-full border-2 border-gold-400/80 bg-gold-400/10 text-center font-mono text-[11px] font-semibold leading-tight text-gold-200 shadow-gold">{c.code}</div>
-        <h3 className="font-display text-2xl">{c.name}</h3>
-        <p className="mt-1 font-mono text-[11px] uppercase tracking-widest text-ivory/50">{c.note}</p>
+      <div className="relative flex items-center gap-5 sm:block [transform:translateZ(50px)]">
+        <div className="grid h-16 w-16 shrink-0 place-items-center sm:mb-6 sm:h-20 sm:w-20 rounded-full border-2 border-gold-400/80 bg-gold-400/10 text-center font-mono text-[11px] font-semibold leading-tight text-gold-200 shadow-gold">{c.code}</div>
+        <div><h3 className="font-display text-2xl">{c.name}</h3>
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-widest text-ivory/50">{c.note}</p></div>
       </div>
     </div>
   );
@@ -39,9 +39,9 @@ function CertCard({ c }: { c: (typeof CERTS)[number] }) {
 
 export default function Certifications() {
   return (
-    <section id="certifications" className="section py-32">
+    <section id="certifications" className="section py-20 md:py-32">
       <Reveal><p className="eyebrow mb-4">04 / Compliance</p></Reveal>
-      <Reveal as="h2" className="h-display mb-16 text-6xl md:text-7xl">Verified. Audited. <span className="italic text-gold-200">Trusted.</span></Reveal>
+      <Reveal as="h2" className="h-display mb-10 text-5xl md:mb-16 md:text-7xl">Verified. Audited. <span className="italic text-gold-200">Trusted.</span></Reveal>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {CERTS.map((c, i) => <Reveal key={c.code} delay={i * 0.08}><CertCard c={c} /></Reveal>)}
       </div>

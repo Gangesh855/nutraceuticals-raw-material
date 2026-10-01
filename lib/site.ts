@@ -6,4 +6,6 @@ export const SITE = {
     "GK Botanicals manufactures standardised botanical extracts — Moringa, Ashwagandha, Turmeric (Curcumin), Bacopa, Ginger and Boswellia — for global nutraceutical brands.",
   email: "sales@gkbotanicals.com",
   phone: "+91 00000 00000",
+  // Digits only, with country code (used for the WhatsApp quick-contact link). Placeholder — replace with the real number.
+  whatsapp: "910000000000",
 };

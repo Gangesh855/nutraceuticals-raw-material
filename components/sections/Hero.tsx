@@ -29,7 +29,7 @@ export default function Hero() {
   const words = ["Pure", "Botanicals,", "Precision", "Manufacturing."];
 
   return (
-    <section ref={ref} id="top" className="relative flex min-h-screen items-center overflow-hidden section pt-28"
+    <section ref={ref} id="top" className="relative flex min-h-[100svh] items-center overflow-hidden section pb-24 pt-28 md:pb-0"
       onPointerMove={(e) => { mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
       <motion.div style={{ x: bgX, y: bgY }} className="pointer-events-none absolute -inset-10 bg-[radial-gradient(60%_50%_at_70%_45%,rgba(16,185,129,.22),transparent),radial-gradient(40%_40%_at_20%_80%,rgba(212,175,55,.10),transparent)]" />
       <div className="absolute inset-0 opacity-90" aria-hidden>{show3d && <HeroScene />}</div>
@@ -58,7 +58,7 @@ export default function Hero() {
           </motion.div>
         ))}
       </motion.div>
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[.3em] text-ivory/40">Scroll ↓</div>
+      <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 font-mono md:block text-[10px] uppercase tracking-[.3em] text-ivory/40">Scroll ↓</div>
     </section>
   );
 }

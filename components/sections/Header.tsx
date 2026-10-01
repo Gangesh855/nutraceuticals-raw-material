@@ -27,9 +27,9 @@ export default function Header() {
           <span className="grid h-9 w-9 place-items-center rounded-full border border-gold-400/70 font-display text-lg text-gold-200">GK</span>
           <span className="font-display text-xl tracking-wide">GK Botanicals</span>
         </Link>
-        <ul className="hidden items-center gap-9 font-mono text-[11px] uppercase tracking-[.2em] md:flex">
-          <li className="relative" onMouseEnter={() => setMenu(true)} onMouseLeave={() => setMenu(false)}>
-            <Link href="/#products" className="py-3 hover:text-gold-200 transition-colors">Products ▾</Link>
+        <ul className="hidden items-center gap-6 font-mono text-[11px] uppercase tracking-[.2em] md:flex lg:gap-9">
+          <li className="relative" onMouseEnter={() => setMenu(true)} onMouseLeave={() => setMenu(false)} onFocus={() => setMenu(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setMenu(false); }} onKeyDown={(e) => { if (e.key === "Escape") setMenu(false); }}>
+            <Link href="/#products" className="py-3 hover:text-gold-200 transition-colors" aria-haspopup="true" aria-expanded={menu}>Products ▾</Link>
             <AnimatePresence>
               {menu && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.3 }}
@@ -44,17 +44,17 @@ export default function Header() {
             </AnimatePresence>
           </li>
           {LINKS.map((l) => (
-            <li key={l.href}><Link href={l.href} className="py-3 hover:text-gold-200 transition-colors">{l.label}</Link></li>
+            <li key={l.href}><Link href={l.href} className="inline-block py-3 hover:text-gold-200 transition-colors">{l.label}</Link></li>
           ))}
         </ul>
-        <Link href="/#contact" className="hidden rounded-full border border-gold-400/60 px-5 py-2 font-mono text-[11px] uppercase tracking-[.2em] text-gold-200 transition-colors hover:bg-gold-400/15 md:block">Request COA</Link>
-        <button className="md:hidden font-mono text-xs uppercase tracking-widest" aria-label="Toggle menu" aria-expanded={menu} onClick={() => setMenu((m) => !m)}>{menu ? "Close" : "Menu"}</button>
+        <Link href="/#contact" className="hidden rounded-full border border-gold-400/60 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-gold-200 transition-colors hover:bg-gold-400/15 lg:block">Request COA</Link>
+        <button className="-mr-3 px-3 py-3 md:hidden font-mono text-xs uppercase tracking-widest" aria-label="Toggle menu" aria-expanded={menu} onClick={() => setMenu((m) => !m)}>{menu ? "Close" : "Menu"}</button>
       </nav>
       {menu && (
         <div className="glass mx-4 mt-3 p-5 md:hidden">
-          <ul className="space-y-3 font-mono text-xs uppercase tracking-widest">
-            <li><Link href="/#products" onClick={() => setMenu(false)}>Products</Link></li>
-            {LINKS.map((l) => <li key={l.href}><Link href={l.href} onClick={() => setMenu(false)}>{l.label}</Link></li>)}
+          <ul className="space-y-1 font-mono text-xs uppercase tracking-widest">
+            <li><Link className="block py-3" href="/#products" onClick={() => setMenu(false)}>Products</Link></li>
+            {LINKS.map((l) => <li key={l.href}><Link className="block py-3" href={l.href} onClick={() => setMenu(false)}>{l.label}</Link></li>)}
           </ul>
         </div>
       )}
