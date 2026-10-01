@@ -22,7 +22,6 @@ const WIDE: Item[] = [
   { k: "hard", fx: 0.52, fy: 0.9, s: 0.6, a: "#d4af37", b: "#f2e8c9", p: "#e0a010", rot: -0.9, depth: 0.7 },
 ];
 const NARROW: Item[] = [
-  { k: "gel", fx: 0.9, fy: 0.93, s: 0.7, rot: -0.5, depth: 1.3 },
   { k: "hard", fx: 0.88, fy: 0.07, s: 0.45, a: "#d4af37", b: "#f2e8c9", p: "#e0a010", rot: -0.9, depth: 0.7 },
   { k: "hard", fx: 0.18, fy: 0.96, s: 0.5, a: "#2f9e6e", b: "#f2e8c9", p: "#7fae4a", rot: 0.7, depth: 1 },
 ];
