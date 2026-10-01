@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import SafeCanvas from "./SafeCanvas";
 import { Environment, Float, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import Particles from "./Particles";
@@ -77,7 +78,7 @@ function Sequence({ seq, mobile }: { seq: React.MutableRefObject<Seq>; mobile: b
 export default function HeroScene({ seq, mobile = false }: { seq: React.MutableRefObject<Seq>; mobile?: boolean }) {
   return (
     <PauseOffscreen>{(visible) => (
-      <Canvas frameloop={visible ? "always" : "never"} dpr={[1, mobile ? 1.4 : 1.75]} camera={{ position: [0, 0, 6], fov: 40 }} gl={{ antialias: true, alpha: true }}>
+      <SafeCanvas frameloop={visible ? "always" : "never"} dpr={[1, mobile ? 1.4 : 1.75]} camera={{ position: [0, 0, 6], fov: 40 }} gl={{ antialias: true, alpha: true }}>
         {/* Cinematic sunlight: warm key from upper right, cool leaf-green bounce, soft white strip for specular streaks */}
         <ambientLight intensity={0.35} />
         <directionalLight position={[5, 5, 4]} intensity={2.6} color="#ffd88a" />
@@ -91,7 +92,7 @@ export default function HeroScene({ seq, mobile = false }: { seq: React.MutableR
         <Sequence seq={seq} mobile={mobile} />
         {/* dust motes catching the light */}
         <Particles count={mobile ? 70 : 140} color="#ffe2a0" size={0.028} spread={9} />
-      </Canvas>
+      </SafeCanvas>
     )}</PauseOffscreen>
   );
 }

@@ -9,6 +9,7 @@ import HeroBackdrop from "@/components/sections/HeroBackdrop";
 import HeroIntro from "@/components/sections/HeroIntro";
 import HeroCallouts from "@/components/sections/HeroCallouts";
 import { makeSeq } from "@/lib/heroSeq";
+import { webglOK } from "@/components/three/SafeCanvas";
 import { PRODUCTS } from "@/lib/products";
 
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: false });
@@ -26,6 +27,7 @@ export default function Hero() {
   const [reveal, setReveal] = useState(false);
   const [show3d, setShow3d] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [glOk, setGlOk] = useState(false);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [auto, setAuto] = useState(true);
@@ -38,10 +40,13 @@ export default function Hero() {
   // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise wait for the preloader.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("gkIntro") === "1";
+    let seen = false;
+    try { seen = sessionStorage.getItem("gkIntro") === "1"; } catch { /* storage blocked: treat as first visit */ }
+    const gl = webglOK(); setGlOk(gl);
+    const noGL = !gl; // the sequence is built around the 3D capsule; without WebGL show the finished hero straight away
     setAuto(!reduce); setMobile(window.matchMedia("(max-width: 767px)").matches);
     const t3d = setTimeout(() => setShow3d(!reduce), 250);
-    if (reduce || seen) {
+    if (reduce || seen || noGL) {
       Object.assign(seq.current, makeSeq(true)); setReveal(true); setPhase("done");
       return () => clearTimeout(t3d);
     }
@@ -57,7 +62,7 @@ export default function Hero() {
     if (phase !== "intro") return;
     const s = seq.current;
     const t = gsap.timeline({
-      onComplete: () => { sessionStorage.setItem("gkIntro", "1"); setPhase("done"); },
+      onComplete: () => { try { sessionStorage.setItem("gkIntro", "1"); } catch { /* ignore */ } setPhase("done"); },
     });
     t.to(s, { sceneF: 5, duration: 6.25, ease: "none" }, 0)
       .to(s, { capsuleIn: 1, duration: 1.6, ease: "power2.out" }, 4.9)
@@ -100,7 +105,7 @@ export default function Hero() {
       {/* WebGL: extract streams, the large filling capsule, floating accents */}
       <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>{show3d && <HeroScene seq={seq} mobile={mobile} />}</div>
 
-      <HeroCallouts show={shown} />
+      <HeroCallouts show={shown && glOk && show3d} />
 
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>

@@ -9,6 +9,12 @@ type Drop = { x: number; y: number; r: number; max: number; born: number; slide:
  * 2D extraction effects drawn over the close-ups, one per material:
  * 0 powder being ground · 1 golden powder pouring · 2 droplets condensing on glass · 3 oil separating from water · 4 golden liquid filtering through glass tubes.
  */
+type Ctx = CanvasRenderingContext2D;
+// roundRect is missing in older Safari/Firefox; fall back to a plain rectangle
+const rrect = (c: Ctx, x: number, y: number, w: number, h: number, r: number | number[]) => {
+  if (typeof (c as Ctx & { roundRect?: unknown }).roundRect === "function") c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h);
+};
+
 export default function IntroFX({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -99,10 +105,10 @@ export default function IntroFX({ seq }: { seq: React.MutableRefObject<Seq> }) {
           }
           ctx.globalCompositeOperation = "lighter";
           const g = ctx.createLinearGradient(x - tw / 2, 0, x + tw / 2, 0); g.addColorStop(0, "rgba(255,170,40,.10)"); g.addColorStop(0.5, "rgba(255,210,110,.38)"); g.addColorStop(1, "rgba(255,150,30,.10)");
-          ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x - tw / 2, lvl, tw, bot - lvl, [0, 0, tw / 2, tw / 2]); ctx.fill();
+          ctx.fillStyle = g; ctx.beginPath(); rrect(ctx, x - tw / 2, lvl, tw, bot - lvl, [0, 0, tw / 2, tw / 2]); ctx.fill();
           glowDot(x, lvl, tw * 0.9, "255,220,140", 0.35);
           ctx.globalCompositeOperation = "source-over";
-          ctx.strokeStyle = "rgba(235,248,242,.5)"; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(x - tw / 2, top, tw, bot - top, [tw / 2, tw / 2, tw / 2, tw / 2]); ctx.stroke();
+          ctx.strokeStyle = "rgba(235,248,242,.5)"; ctx.lineWidth = 2.5; ctx.beginPath(); rrect(ctx, x - tw / 2, top, tw, bot - top, [tw / 2, tw / 2, tw / 2, tw / 2]); ctx.stroke();
           ctx.strokeStyle = "rgba(255,255,255,.28)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - tw * 0.28, top + tw * 0.6); ctx.lineTo(x - tw * 0.28, bot - tw * 0.7); ctx.stroke();
           if (k > 0.05 && Math.random() < dt * 2.4) parts.push({ x, y: bot + tw * 0.2, vx: 0, vy: 0, life: 0, max: 1.4, r: tw * 0.16 });
         });
