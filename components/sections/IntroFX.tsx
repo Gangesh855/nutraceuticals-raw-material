@@ -89,6 +89,14 @@ export default function IntroFX({ seq }: { seq: React.MutableRefObject<Seq> }) {
         tubes.forEach((fx, i) => {
           const x = w * fx, k = Math.min(1, Math.max(0, (u * 1.15 - i * 0.12)));
           const lvl = bot - (bot - top - tw) * k * 0.82;
+          // a botanical sprig standing in the tube (stem + leaves), as in a lab specimen
+          ctx.globalCompositeOperation = "source-over";
+          const leaf = i === 1 ? "rgba(120,200,110,.75)" : i === 2 ? "rgba(235,200,90,.7)" : "rgba(90,170,100,.75)";
+          ctx.strokeStyle = leaf; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, bot - tw * 0.4); ctx.quadraticCurveTo(x + tw * 0.15, (top + bot) / 2, x - tw * 0.05, top + tw * 1.4); ctx.stroke();
+          for (let j = 0; j < 6; j++) {
+            const ly = bot - tw * 0.8 - j * ((bot - top - tw * 2.4) / 6), side = j % 2 ? 1 : -1;
+            ctx.fillStyle = leaf; ctx.beginPath(); ctx.ellipse(x + side * tw * 0.2, ly, tw * 0.2, tw * 0.07, side * -0.5 + Math.sin(clock + j) * 0.05, 0, Math.PI * 2); ctx.fill();
+          }
           ctx.globalCompositeOperation = "lighter";
           const g = ctx.createLinearGradient(x - tw / 2, 0, x + tw / 2, 0); g.addColorStop(0, "rgba(255,170,40,.10)"); g.addColorStop(0.5, "rgba(255,210,110,.38)"); g.addColorStop(1, "rgba(255,150,30,.10)");
           ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x - tw / 2, lvl, tw, bot - lvl, [0, 0, tw / 2, tw / 2]); ctx.fill();

@@ -94,3 +94,10 @@ body::before {
   .kb, .sun-shafts, .dapple, .golden-glow { animation: none !important; }
 }
 @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@keyframes sway { from { transform: rotate(-1.4deg) translate3d(-1%, 0, 0); } to { transform: rotate(1.6deg) translate3d(1%, 1%, 0); } }
+.leaf-shadow {
+  position: absolute; right: 0; top: 0; width: 70%; height: 80%; pointer-events: none; mix-blend-mode: multiply; opacity: .55;
+  fill: rgba(4, 12, 8, .85); filter: blur(7px); transform-origin: 100% 0; animation: sway 11s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) { .leaf-shadow { animation: none !important; } }

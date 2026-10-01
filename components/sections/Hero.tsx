@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import MagneticButton from "@/components/ui/MagneticButton";
 import HeroBackdrop from "@/components/sections/HeroBackdrop";
 import HeroIntro from "@/components/sections/HeroIntro";
+import HeroCallouts from "@/components/sections/HeroCallouts";
 import { makeSeq } from "@/lib/heroSeq";
 import { PRODUCTS } from "@/lib/products";
 
@@ -98,6 +99,8 @@ export default function Hero() {
 
       {/* WebGL: extract streams, the large filling capsule, floating accents */}
       <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>{show3d && <HeroScene seq={seq} mobile={mobile} />}</div>
+
+      <HeroCallouts show={shown} />
 
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>

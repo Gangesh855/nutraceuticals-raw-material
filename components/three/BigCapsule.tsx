@@ -46,6 +46,74 @@ function haloTexture() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
+// Same five-colour ramp as the liquid shader (moringa, turmeric, ginger, bacopa, boswellia), bottom → top.
+const RAMP = ["#45c26e", "#f59a17", "#efca4d", "#7fd871", "#e6850d"].map((c) => new THREE.Color(c));
+const rampAt = (h: number, out: THREE.Color) => {
+  const x = Math.min(0.9999, Math.max(0, h)) * 4, i = Math.floor(x);
+  return out.copy(RAMP[i]).lerp(RAMP[i + 1], x - i);
+};
+
+/** Granules and berry-like beads suspended in the capsule; each appears as the fill level passes it. */
+function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const N = 170;
+  const data = useMemo(() => Array.from({ length: N }, () => {
+    const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 0.34, y = (Math.random() * 2 - 1) * 1.0;
+    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y, s: 0.028 + Math.pow(Math.random(), 2) * 0.075, ph: Math.random() * 6.28 };
+  }), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const col = useMemo(() => new THREE.Color(), []);
+  const coloured = useRef(false);
+  useFrame((state) => {
+    const m = ref.current; if (!m) return;
+    if (!coloured.current) {
+      data.forEach((d, i) => m.setColorAt(i, rampAt((d.y + 1) / 2, col)));
+      (m.instanceColor as THREE.InstancedBufferAttribute).needsUpdate = true;
+      coloured.current = true;
+    }
+    const s = seq.current, t = state.clock.elapsedTime, level = -1.1 + s.fill * 2.2 * 1.03;
+    data.forEach((d, i) => {
+      const vis = Math.min(1, Math.max(0, (level - d.y - 0.04) / 0.18));
+      dummy.position.set(d.x + Math.sin(t * 0.7 + d.ph) * 0.012, d.y + Math.sin(t * 0.9 + d.ph) * 0.014, d.z);
+      dummy.scale.setScalar(d.s * vis * (0.92 + 0.08 * Math.sin(t * 2 + d.ph)));
+      dummy.updateMatrix(); m.setMatrixAt(i, dummy.matrix);
+    });
+    m.instanceMatrix.needsUpdate = true;
+    (m.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.12 + s.glow * 0.55;
+  });
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, N]} renderOrder={1}>
+      <icosahedronGeometry args={[1, 1]} />
+      <meshStandardMaterial roughness={0.45} metalness={0.05} emissive="#ffb347" />
+    </instancedMesh>
+  );
+}
+
+/** Thin dotted orbit rings around the finished capsule. */
+function OrbitRings({ seq }: { seq: React.MutableRefObject<Seq> }) {
+  const g = useRef<THREE.Group>(null);
+  const mats = useRef<THREE.PointsMaterial[]>([]);
+  const geos = useMemo(() => [-0.82, 0, 0.82].map((y, k) => {
+    const pts: number[] = [], n = 150, a = 1.18 + k * 0.05, b = 0.46;
+    for (let i = 0; i < n; i++) { const th = (i / n) * Math.PI * 2; pts.push(Math.cos(th) * a, y, Math.sin(th) * b * 1.6); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)); return geo;
+  }), []);
+  useFrame((state) => {
+    const s = seq.current, t = state.clock.elapsedTime, vis = Math.max(0, s.settle - 0.3) / 0.7 * s.glow;
+    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.15; }
+    mats.current.forEach((m, i) => { if (m) m.opacity = vis * (0.55 - i * 0.08); });
+  });
+  return (
+    <group ref={g} visible={false}>
+      {geos.map((geo, i) => (
+        <points key={i} geometry={geo}>
+          <pointsMaterial ref={(m) => { if (m) mats.current[i] = m; }} color="#e9e06a" size={0.034} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </points>
+      ))}
+    </group>
+  );
+}
+
 type Props = { seq: React.MutableRefObject<Seq>; mouth: React.MutableRefObject<THREE.Vector3> };
 
 /** The hero capsule: transparent glass shells, layered liquid that fills with the sequence, and a glow that rises with the fill. */
@@ -112,9 +180,16 @@ export default function BigCapsule({ seq, mouth }: Props) {
       <pointLight ref={light} color="#ffd27a" distance={9} decay={1.6} />
       <group ref={spin}>
         <mesh geometry={liquid} material={liqMat} renderOrder={1} />
+        <Contents seq={seq} />
+        {/* seam where the two halves meet */}
+        <mesh rotation={[Math.PI / 2, 0, 0]} renderOrder={3}>
+          <torusGeometry args={[R * 1.035, 0.013, 12, 72]} />
+          <meshPhysicalMaterial color="#ffffff" transparent opacity={0.6} roughness={0.08} clearcoat={1} envMapIntensity={2.6} depthWrite={false} />
+        </mesh>
         <mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} />
         <mesh geometry={shellB} material={shellMat} position={[0, 0.05, 0]} rotation={[Math.PI, 0, 0]} renderOrder={2} />
       </group>
+      <OrbitRings seq={seq} />
     </group>
   );
 }
