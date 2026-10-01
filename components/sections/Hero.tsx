@@ -110,13 +110,13 @@ export default function Hero() {
       <div className="relative z-10 max-w-4xl">
         <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>
         {/* Headline stays in the DOM from first paint (crawlable); only its visual reveal is animated */}
-        <h1 className="h-display text-[13vw] md:text-[7.5vw] lg:text-[5.4vw]">
+        <h1 className="h-display text-[13vw] md:text-[5.2vw] lg:text-[5.4vw]">
           {WORDS.map((w, i) => (
             <span key={w}>
               <span className="inline-block overflow-hidden align-bottom pr-[.25em]">
                 <motion.span className={`inline-block ${i === 2 ? "italic text-gold-200" : ""}`} initial={{ y: "110%" }} animate={{ y: shown ? 0 : "110%" }} transition={{ duration: 1.2, delay: shown ? i * 0.12 : 0, ease: EASE }}>{w}</motion.span>
               </span>{" "}
-              {i === 1 && <br className="hidden lg:block" />}
+              {i === 1 && <br className="hidden md:block" />}
             </span>
           ))}
         </h1>

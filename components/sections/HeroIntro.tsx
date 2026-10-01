@@ -17,6 +17,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const plates = useRef<(HTMLDivElement | null)[]>([]);
   const veil = useRef<HTMLDivElement>(null);
+  const bloom = useRef<HTMLDivElement>(null);
   const cap = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -42,8 +43,9 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
         const push = 1.06 + 0.08 * clamp((f - i + 0.5) / 2); // slow, shallow push-in
         const pan = (f - (i + 0.5)) * -22; // slow lateral pan
         el.style.opacity = String(w * s.lab); el.style.visibility = w * s.lab < 0.01 ? "hidden" : "visible";
-        el.style.transform = `translate3d(${-p.x * 12 + pan}px, ${-p.y * 8}px, 0) scale(${push})`;
+        el.style.transform = `translate3d(${-p.x * 12 + pan}px, ${-p.y * 8 - (1 - s.lab) * 90}px, 0) scale(${push + (1 - s.lab) * 0.05})`; // as the lab dissolves, the view drifts gently upward
       });
+      if (bloom.current) bloom.current.style.opacity = String(Math.sin(Math.PI * clamp(s.veil)) * 0.7);
       if (veil.current) { const v = Math.sin(Math.PI * clamp(s.veil)); veil.current.style.opacity = String(v); veil.current.style.display = v < 0.01 ? "none" : "block"; }
       if (root.current) root.current.style.opacity = s.lab < 0.01 && s.veil >= 1 ? "0" : "1";
       const idx = Math.min(PLATES.length - 1, Math.floor(clamp(f, 0, 4.999)));
@@ -75,6 +77,8 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
       <IntroFX seq={seq} />
       <div ref={cap} className="absolute bottom-8 left-24 text-[11px] font-medium uppercase tracking-[.24em] text-ivory/70 md:left-28" />
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-white/10"><span ref={bar} className="block h-full origin-left bg-gold-400" style={{ transform: "scaleX(0)" }} /></span>
+      {/* a soft bloom of light as the view rises out of the lab */}
+      <div ref={bloom} className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_85%,rgba(255,240,205,.5),rgba(255,225,170,.12)_55%,transparent_80%)]" style={{ opacity: 0 }} />
       {/* frosted-glass transition between the lab and the final hero */}
       <div ref={veil} className="absolute inset-0 bg-charcoal-950/30 backdrop-blur-md" style={{ opacity: 0, display: "none" }} />
     </div>

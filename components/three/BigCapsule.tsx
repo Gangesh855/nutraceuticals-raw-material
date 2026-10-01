@@ -100,7 +100,7 @@ function OrbitRings({ seq }: { seq: React.MutableRefObject<Seq> }) {
   }), []);
   useFrame((state) => {
     const s = seq.current, t = state.clock.elapsedTime, vis = Math.max(0, s.settle - 0.3) / 0.7 * s.glow;
-    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.08; }
+    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.08; g.current.rotation.x = 0.5; }
     mats.current.forEach((m, i) => { if (m) m.opacity = vis * 0.3; });
   });
   return (
@@ -121,13 +121,14 @@ export default function BigCapsule({ seq, mouth }: Props) {
   const { viewport } = useThree();
   const group = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
+  const cap = useRef<THREE.Group>(null); // the top half: floats above while the capsule fills, then lowers to close
   const halo = useRef<THREE.Mesh>(null);
   const light = useRef<THREE.PointLight>(null);
   const pointer = useRef({ x: 0, y: 0 });
 
   const { shellA, shellB, liquid, liqMat, shellMat, haloMat } = useMemo(() => {
     const shellMat = new THREE.MeshPhysicalMaterial({
-      color: "#e8f6ef", transparent: true, opacity: 0.2, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
+      color: "#eef8f2", transparent: true, opacity: 0.3, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
       envMapIntensity: 2.4, depthWrite: false, side: THREE.DoubleSide,
     });
     const liqMat = new THREE.ShaderMaterial({
@@ -146,6 +147,8 @@ export default function BigCapsule({ seq, mouth }: Props) {
   useFrame((state, dt) => {
     const g = group.current, sp = spin.current; if (!g || !sp) return;
     const s = seq.current, t = state.clock.elapsedTime;
+    const k = Math.min(1, Math.max(0, (s.fill - 0.42) / 0.28)); // closes between 42 % and 70 % full
+    if (cap.current) cap.current.position.y = 0.95 * (1 - k * k * (3 - 2 * k));
     pointer.current.x += (state.pointer.x - pointer.current.x) * 0.05;
     pointer.current.y += (state.pointer.y - pointer.current.y) * 0.05;
 
@@ -167,7 +170,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
     const u = liqMat.uniforms;
     u.uBottom.value = bottom; u.uHeight.value = height; u.uLevel.value = bottom + s.fill * height * 1.03 - (s.fill <= 0 ? 1 : 0);
     u.uTime.value = t; u.uGlow.value = s.glow;
-    shellMat.opacity = 0.2 * s.capsuleIn;
+    shellMat.opacity = 0.3 * s.capsuleIn;
     // illumination
     if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn; }
     if (light.current) light.current.intensity = 1 + s.glow * 26;
@@ -186,7 +189,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
           <torusGeometry args={[R * 1.035, 0.013, 12, 72]} />
           <meshPhysicalMaterial color="#ffffff" transparent opacity={0.6} roughness={0.08} clearcoat={1} envMapIntensity={2.6} depthWrite={false} />
         </mesh>
-        <mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} />
+        <group ref={cap}><mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} /></group>
         <mesh geometry={shellB} material={shellMat} position={[0, 0.05, 0]} rotation={[Math.PI, 0, 0]} renderOrder={2} />
       </group>
       <OrbitRings seq={seq} />

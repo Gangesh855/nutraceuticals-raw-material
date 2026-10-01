@@ -30,7 +30,7 @@ export default function Streams({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const vw = viewport.width, vh = viewport.height;
 
   const items = useMemo(() => {
-    const dst = new THREE.Vector3(0, 0.5 * vh * 0.36, 0);
+    const dst = new THREE.Vector3(0, 0.55, 0); // the open rim of the lower half
     const src: [number, number][] = [[-0.62, 0.3], [-0.62, -0.14], [0.62, 0.34], [0.62, -0.2], [0, 0.7]];
     return src.flatMap(([fx, fy], i) => {
       const a = new THREE.Vector3(fx * vw, fy * vh, 0);
