@@ -56,10 +56,10 @@ const rampAt = (h: number, out: THREE.Color) => {
 /** Granules and berry-like beads suspended in the capsule; each appears as the fill level passes it. */
 function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const N = 170;
+  const N = 64;
   const data = useMemo(() => Array.from({ length: N }, () => {
     const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 0.34, y = (Math.random() * 2 - 1) * 1.0;
-    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y, s: 0.028 + Math.pow(Math.random(), 2) * 0.075, ph: Math.random() * 6.28 };
+    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y, s: 0.024 + Math.pow(Math.random(), 2) * 0.05, ph: Math.random() * 6.28 };
   }), []);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const col = useMemo(() => new THREE.Color(), []);
@@ -93,15 +93,15 @@ function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
 function OrbitRings({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const g = useRef<THREE.Group>(null);
   const mats = useRef<THREE.PointsMaterial[]>([]);
-  const geos = useMemo(() => [-0.82, 0, 0.82].map((y, k) => {
+  const geos = useMemo(() => [0.05].map((y, k) => {
     const pts: number[] = [], n = 150, a = 1.18 + k * 0.05, b = 0.46;
     for (let i = 0; i < n; i++) { const th = (i / n) * Math.PI * 2; pts.push(Math.cos(th) * a, y, Math.sin(th) * b * 1.6); }
     const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)); return geo;
   }), []);
   useFrame((state) => {
     const s = seq.current, t = state.clock.elapsedTime, vis = Math.max(0, s.settle - 0.3) / 0.7 * s.glow;
-    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.15; }
-    mats.current.forEach((m, i) => { if (m) m.opacity = vis * (0.55 - i * 0.08); });
+    if (g.current) { g.current.visible = vis > 0.01; g.current.rotation.y = t * 0.08; }
+    mats.current.forEach((m, i) => { if (m) m.opacity = vis * 0.3; });
   });
   return (
     <group ref={g} visible={false}>
@@ -169,7 +169,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
     u.uTime.value = t; u.uGlow.value = s.glow;
     shellMat.opacity = 0.2 * s.capsuleIn;
     // illumination
-    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.75 * s.capsuleIn; }
+    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn; }
     if (light.current) light.current.intensity = 1 + s.glow * 26;
     mouth.current.set(g.position.x, wy + (CAP_LEN * sc) / 2 + 0.12, 0);
   });

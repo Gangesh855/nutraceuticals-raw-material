@@ -34,8 +34,8 @@ export default function Hero() {
   const tl = useRef<gsap.core.Timeline | null>(null);
   const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
   const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
-  const bgX = useTransform(mx, (v) => v * -16), bgY = useTransform(my, (v) => v * -10);
-  const panelX = useTransform(mx, (v) => v * 14), panelY = useTransform(my, (v) => v * 10);
+  const bgX = useTransform(mx, (v) => v * -10), bgY = useTransform(my, (v) => v * -6);
+  const panelX = useTransform(mx, (v) => v * 8), panelY = useTransform(my, (v) => v * 6);
 
   // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise wait for the preloader.
   useEffect(() => {
@@ -64,16 +64,16 @@ export default function Hero() {
     const t = gsap.timeline({
       onComplete: () => { try { sessionStorage.setItem("gkIntro", "1"); } catch { /* ignore */ } setPhase("done"); },
     });
-    t.to(s, { sceneF: 5, duration: 6.25, ease: "none" }, 0)
-      .to(s, { capsuleIn: 1, duration: 1.6, ease: "power2.out" }, 4.9)
-      .to(s, { stream: 1, duration: 1.2, ease: "power1.in" }, 5.4)
-      .to(s, { fill: 1, duration: 4.8, ease: "power1.inOut" }, 5.9)
-      .to(s, { glow: 1, duration: 4.8, ease: "power2.in" }, 5.9)
-      .to(s, { lab: 0, duration: 1.8, ease: "power2.inOut" }, 9.1)
-      .to(s, { veil: 1, duration: 1.8, ease: "power2.inOut" }, 9.1)
-      .call(() => setReveal(true), undefined, 11.0)
-      .to(s, { stream: 0, duration: 0.9, ease: "power1.out" }, 10.0)
-      .to(s, { settle: 1, duration: 1.9, ease: "power3.inOut" }, 9.9);
+    t.to(s, { sceneF: 5, duration: 5.75, ease: "none" }, 0)
+      .to(s, { capsuleIn: 1, duration: 1.8, ease: "power2.out" }, 4.6)
+      .to(s, { stream: 1, duration: 1.4, ease: "power1.inOut" }, 5.0)
+      .to(s, { fill: 1, duration: 4.8, ease: "power2.inOut" }, 5.4)
+      .to(s, { glow: 1, duration: 4.8, ease: "power2.in" }, 5.4)
+      .to(s, { lab: 0, duration: 2.0, ease: "power2.inOut" }, 9.4)
+      .to(s, { veil: 1, duration: 2.0, ease: "power2.inOut" }, 9.4)
+      .call(() => setReveal(true), undefined, 11.4)
+      .to(s, { stream: 0, duration: 1.0, ease: "power1.out" }, 10.0)
+      .to(s, { settle: 1, duration: 2.2, ease: "power3.inOut" }, 10.2);
     tl.current = t;
     if (location.search.includes("seqdebug")) (window as unknown as { __gkTl?: gsap.core.Timeline }).__gkTl = t;
     return () => { t.kill(); };

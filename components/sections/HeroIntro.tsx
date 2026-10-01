@@ -39,9 +39,10 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
         if (!el) return;
         let w = clamp(1 - Math.abs(f - (i + 0.5)) * 1.8);
         if ((i === 0 && f < 0.5) || (i === PLATES.length - 1 && f > PLATES.length - 0.5)) w = 1;
-        const push = 1.1 + 0.2 * clamp((f - i + 0.5) / 2);
+        const push = 1.06 + 0.08 * clamp((f - i + 0.5) / 2); // slow, shallow push-in
+        const pan = (f - (i + 0.5)) * -22; // slow lateral pan
         el.style.opacity = String(w * s.lab); el.style.visibility = w * s.lab < 0.01 ? "hidden" : "visible";
-        el.style.transform = `translate3d(${-p.x * 26}px, ${-p.y * 16}px, 0) scale(${push})`;
+        el.style.transform = `translate3d(${-p.x * 12 + pan}px, ${-p.y * 8}px, 0) scale(${push})`;
       });
       if (veil.current) { const v = Math.sin(Math.PI * clamp(s.veil)); veil.current.style.opacity = String(v); veil.current.style.display = v < 0.01 ? "none" : "block"; }
       if (root.current) root.current.style.opacity = s.lab < 0.01 && s.veil >= 1 ? "0" : "1";
@@ -59,7 +60,7 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
       {PLATES.map((p, i) => (
         <div key={p.slug} ref={(el) => { plates.current[i] = el; }} className="absolute -inset-[6%] will-change-transform" style={{ opacity: i === 0 ? 1 : 0 }}>
           {/* depth of field: blurred plate behind, sharp centre on top */}
-          <Image src={p.img} alt="" fill sizes="100vw" priority={i < 2} style={{ objectPosition: p.pos }} className="scale-110 object-cover opacity-90 blur-md brightness-[.55] saturate-[1.1]" />
+          <Image src={p.img} alt="" fill sizes="100vw" priority={i < 2} style={{ objectPosition: p.pos }} className="scale-110 object-cover opacity-90 blur-md brightness-[.62] saturate-[1.05]" />
           <Image src={p.img} alt="" fill sizes="100vw" priority={i < 2} style={{ objectPosition: p.pos, WebkitMaskImage: "radial-gradient(55% 52% at 50% 50%, #000 35%, transparent 82%)", maskImage: "radial-gradient(55% 52% at 50% 50%, #000 35%, transparent 82%)" }} className="object-cover brightness-[.95] contrast-[1.08] saturate-[1.05]" />
           {videos && !failed[p.slug] && (
             <video muted loop playsInline autoPlay preload="auto" className="absolute inset-0 h-full w-full object-cover">
@@ -70,9 +71,9 @@ export default function HeroIntro({ seq }: { seq: React.MutableRefObject<Seq> })
         </div>
       ))}
       {/* lab-like grade: cool tint, vignette, faint grid */}
-      <div className="absolute inset-0 bg-[radial-gradient(75%_65%_at_50%_50%,transparent_35%,rgba(3,8,10,.78)_100%),linear-gradient(180deg,rgba(120,170,190,.10),rgba(5,12,14,.35))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(85%_75%_at_50%_50%,transparent_45%,rgba(3,8,10,.62)_100%),linear-gradient(180deg,rgba(150,195,205,.08),rgba(5,12,14,.28))]" />
       <IntroFX seq={seq} />
-      <div ref={cap} className="absolute bottom-8 left-24 font-mono text-[11px] uppercase tracking-[.25em] text-ivory/75 md:left-28" />
+      <div ref={cap} className="absolute bottom-8 left-24 text-[11px] font-medium uppercase tracking-[.24em] text-ivory/70 md:left-28" />
       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-white/10"><span ref={bar} className="block h-full origin-left bg-gold-400" style={{ transform: "scaleX(0)" }} /></span>
       {/* frosted-glass transition between the lab and the final hero */}
       <div ref={veil} className="absolute inset-0 bg-charcoal-950/30 backdrop-blur-md" style={{ opacity: 0, display: "none" }} />

@@ -12,6 +12,7 @@ html.lenis, html.lenis body { height: auto; }
 
 body {
   @apply bg-charcoal-950 text-ivory font-sans antialiased;
+  font-variant-numeric: tabular-nums;
   overflow-x: hidden;
 }
 ::selection { background: rgba(16,185,129,.4); }
@@ -44,8 +45,9 @@ body::before {
     opacity: var(--edge, .35); transition: opacity .5s var(--ease); pointer-events: none;
   }
   .glow-edge:hover { --edge: 1; }
-  .eyebrow { @apply font-mono text-xs uppercase tracking-[.3em] text-gold-400; }
-  .h-display { @apply font-display font-light leading-[.95] tracking-tight; }
+  .eyebrow { @apply font-sans text-[11px] font-medium uppercase tracking-[.28em] text-gold-400; }
+  /* Inter at light weights with tight tracking reads as a refined display face */
+  .h-display { @apply font-sans font-light leading-[1.02] tracking-[-0.035em]; }
   .section { @apply relative px-6 md:px-12 lg:px-20; }
 }
 
@@ -67,7 +69,7 @@ body::before {
 /* sunlight filtering through leaves: soft diagonal shafts */
 .sun-shafts {
   position: absolute; inset: -10%; pointer-events: none; mix-blend-mode: screen;
-  background: linear-gradient(112deg, transparent 18%, rgba(255, 224, 150, .22) 26%, transparent 34%, transparent 43%, rgba(255, 224, 150, .14) 51%, transparent 59%, transparent 66%, rgba(255, 224, 150, .18) 73%, transparent 81%);
+  background: linear-gradient(112deg, transparent 18%, rgba(255, 224, 150, .13) 26%, transparent 34%, transparent 43%, rgba(255, 224, 150, .08) 51%, transparent 59%, transparent 66%, rgba(255, 224, 150, .1) 73%, transparent 81%);
   -webkit-mask-image: radial-gradient(120% 90% at 88% -12%, #000 0%, transparent 72%);
   mask-image: radial-gradient(120% 90% at 88% -12%, #000 0%, transparent 72%);
   filter: blur(6px); animation: shaft 16s ease-in-out infinite alternate;
@@ -86,7 +88,7 @@ body::before {
 /* golden highlight spilling from the upper right */
 .golden-glow {
   position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
-  background: radial-gradient(55% 48% at 90% 4%, rgba(255, 196, 96, .42), transparent 70%);
+  background: radial-gradient(55% 48% at 90% 4%, rgba(255, 196, 96, .28), transparent 70%);
   animation: breathe 9s ease-in-out infinite alternate;
 }
 
@@ -97,7 +99,7 @@ body::before {
 
 @keyframes sway { from { transform: rotate(-1.4deg) translate3d(-1%, 0, 0); } to { transform: rotate(1.6deg) translate3d(1%, 1%, 0); } }
 .leaf-shadow {
-  position: absolute; right: 0; top: 0; width: 70%; height: 80%; pointer-events: none; mix-blend-mode: multiply; opacity: .55;
+  position: absolute; right: 0; top: 0; width: 70%; height: 80%; pointer-events: none; mix-blend-mode: multiply; opacity: .34;
   fill: rgba(4, 12, 8, .85); filter: blur(7px); transform-origin: 100% 0; animation: sway 11s ease-in-out infinite alternate;
 }
 @media (prefers-reduced-motion: reduce) { .leaf-shadow { animation: none !important; } }
