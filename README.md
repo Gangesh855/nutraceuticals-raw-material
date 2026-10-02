@@ -1,7 +1,7 @@
-# GK Botanicals
+# GK Botanical
 
-Cinematic B2B website for a nutraceutical raw-material manufacturer.
-Next.js 15 (App Router) · React Three Fiber · Tailwind CSS · Framer Motion · GSAP · Lenis.
+Cinematic site for GK Botanical, a standardized botanical extract manufacturer.
+Next.js 15 (App Router) · React 19 · Lenis smooth scroll. Type: Cormorant Garamond (display) + Alegreya (body). Deploys to Cloudflare Workers via OpenNext.
 
 ```bash
 npm install
@@ -10,26 +10,21 @@ npm run build && npm start
 npm run lint     # type-check
 ```
 
-Hero footage: [`docs/HERO_FOOTAGE.md`](docs/HERO_FOOTAGE.md)
-
 Deploy to Cloudflare: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)
 
-Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)
-
 ## Structure
-- `app/` — routes (`/`, `/products/[slug]`, `/blog`, `/blog/[slug]`), `sitemap.ts`, `robots.ts`, JSON-LD schema
-- `components/sections/` — Header, Hero, Philosophy, Products, Timeline, Certifications, Blog, Footer
-- `components/three/` — R3F scenes (turmeric rhizome, capsule, molecule, particles); loaded lazily, client-only
-- `components/ui/` — Cursor, MagneticButton, Reveal, SmoothScroll
-- `lib/` — site config, product and blog content
+- `app/` — layout (Cormorant Garamond + Alegreya via `next/font`), the single page, global CSS (`globals.css` holds the whole design)
+- `components/sections/` — one component per band: Header, Hero, Ticker, House, Library, Field, Approach, Process, Console, Quality, Atelier, Footer
+- `components/experience.ts` — client behaviour: scroll scenes, particle layer, ingredient flow, process tubes, CO₂ phase console, sample-request form. Mounted by `components/Experience.tsx`
+- `lib/botanicals.ts` — the 15 extracts (copy, specs, filters, optional footage)
+
+## Media (`public/media`)
+- `field.mp4` / `field.jpg` — scroll-scrubbed field interlude
+- `<id>.mp4` + `<id>.jpg` (video) or `<id>.jpg` (still) — shown on a library card while it is in focus.
+  Set `clip: { kind: 'video' | 'image', file: '<id>' }` on the extract in `lib/botanicals.ts`.
+  Present: amla, grapeseed, greentea, marigold, mustard, pomegranate, quercetin, turmeric (video); ashwa, boswellia, fenugreek, milkthistle, reishi, ginkgo, goji (still).
 
 ## Before launch
-- Contact form (`/api/contact`): set `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` (see `.env.example`). Without them, production returns a friendly error and dev just logs submissions. The in-memory rate limit is per instance; use a shared store if you scale out.
-- Set `NEXT_PUBLIC_SITE_URL` (sitemap, canonical, schema).
-- Set `NEXT_PUBLIC_EXTRACTION_VIDEO` (e.g. `/video/extraction.mp4`) for the Philosophy background loop.
-- Replace placeholder contact details in `lib/site.ts`, and product specs in `lib/products.ts` with verified data.
-- Replace placeholder certification cards with real certificates (scope, body, validity). Do not publish unverified claims.
-- Replace sample blog copy in `lib/posts.ts`; the hero stats are placeholders too.
-
-## Imagery
-`public/images/*.webp` are crops of a single AI-generated reference image supplied by the client (it carries a "Made with AI" badge in the moringa panel). Replace them with licensed, real photography of your own materials and facility before launch; keep the filenames or update `image` in `lib/products.ts` and `lib/posts.ts`.
+- The sample request form drafts a message and copies it; nothing is sent. Replace `samples@gkbotanical.example` (Atelier and Footer) with a real address, or wire the form to an endpoint.
+- Set `NEXT_PUBLIC_SITE_URL` (metadata base).
+- Replace placeholder specs, batch data, certifications and the specimen certificate with verified data.

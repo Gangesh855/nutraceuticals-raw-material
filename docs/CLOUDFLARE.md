@@ -15,12 +15,8 @@ The repo root is configured for Cloudflare Workers with the [OpenNext adapter](h
      `scripts/cf-ci-build.mjs`), or set `npx opennextjs-cloudflare build` and add build variable `SKIP_CF_INSTALL_BUILD=1`
    - **Deploy command:** the default `npx wrangler deploy` (it delegates to `opennextjs-cloudflare deploy`)
 4. **Build variables** (Settings → Build → Variables and secrets): `NEXT_PUBLIC_SITE_URL` = your final URL, e.g. `https://www.gkbotanicals.com`
-   (used at build time for canonical URLs, sitemap and schema markup).
-   Optional: `NEXT_PUBLIC_EXTRACTION_VIDEO`.
-5. **Runtime secrets** (Settings → Variables and secrets, type *Secret*) for the contact form:
-   `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` (from-address must be on a domain verified in Resend).
-   Without them the form shows visitors an error asking them to email the sales address.
-6. Save and deploy. Add a custom domain under **Settings → Domains & Routes**.
+   (used at build time for the metadata base URL).
+5. Save and deploy. Add a custom domain under **Settings → Domains & Routes**.
 
 Every push to `main` then builds and deploys automatically; other branches get preview builds.
 
@@ -29,15 +25,12 @@ Every push to `main` then builds and deploys automatically; other branches get p
 npm run preview   # opennextjs-cloudflare build + run in the local Workers runtime (workerd)
 npm run deploy    # manual deploy with Wrangler (needs `wrangler login` or CLOUDFLARE_API_TOKEN)
 ```
-For local secrets create `.dev.vars` (git-ignored) with the same three variables.
+
 
 ## Notes
 - `next/image` optimisation uses the Cloudflare **Images binding** (`IMAGES` in `wrangler.jsonc`), billed per unique
   transformation; the free allowance comfortably covers this site. To turn it off, remove the binding and set
   `images: { unoptimized: true }` in `next.config.mjs`.
-- The contact form's rate limit is in-memory per Worker isolate — best effort. For strict limits use Cloudflare's
-  Rate Limiting rules (WAF) or a KV/Durable Object counter.
-- The `astro-landing/` folder is a separate project and is not part of this deployment.
 
 ## Troubleshooting
 - **`ERROR Could not find compiled Open Next config, did you run the build command?`** — the deploy ran before the
