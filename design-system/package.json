@@ -1,0 +1,20 @@
+{
+  "name": "@gk/botanical-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GK Botanical design system: tokens, styles and React components for the botanical-extract manufacturer site.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "peerDependencies": { "react": ">=18", "react-dom": ">=18" }
+}

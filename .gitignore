@@ -12,3 +12,4 @@ astro-landing/node_modules
 .wrangler
 .dev.vars
 cloudflare-env.d.ts
+design-system/dist
