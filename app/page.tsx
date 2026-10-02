@@ -1,25 +1,37 @@
+import Experience from "@/components/Experience";
 import Header from "@/components/sections/Header";
 import Hero from "@/components/sections/Hero";
-import Philosophy from "@/components/sections/Philosophy";
-import Products from "@/components/sections/Products";
-import Timeline from "@/components/sections/Timeline";
-import Certifications from "@/components/sections/Certifications";
-import Blog from "@/components/sections/Blog";
+import Ticker from "@/components/sections/Ticker";
+import House from "@/components/sections/House";
+import Library from "@/components/sections/Library";
+import Field from "@/components/sections/Field";
+import Approach from "@/components/sections/Approach";
+import Process from "@/components/sections/Process";
+import Console from "@/components/sections/Console";
+import Quality from "@/components/sections/Quality";
+import Atelier from "@/components/sections/Atelier";
 import Footer from "@/components/sections/Footer";
 
 export default function Home() {
   return (
     <>
+      <div className="progress" aria-hidden="true" />
+      <canvas id="petals" aria-hidden="true" />
       <Header />
-      <main id="main">
+      <main>
         <Hero />
-        <Philosophy />
-        <Products />
-        <Timeline />
-        <Certifications />
-        <Blog />
+        <Ticker />
+        <House />
+        <Library />
+        <Field />
+        <Approach />
+        <Process />
+        <Console />
+        <Quality />
+        <Atelier />
       </main>
       <Footer />
+      <Experience />
     </>
   );
 }
