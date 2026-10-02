@@ -16,6 +16,8 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: f
 const SLIDE_SLUGS = ["moringa", "ashwagandha", "turmeric-curcumin", "bacopa", "ginger", "boswellia"];
 const SLIDES = SLIDE_SLUGS.map((s) => PRODUCTS.find((p) => p.slug === s)!);
 const WORDS = ["Pure", "Botanicals,", "Precision", "Manufacturing."];
+// Hero panel colour: change these three stops to re-colour the whole hero.
+const HERO_BG = "radial-gradient(70% 80% at 62% 38%, #2f6b55 0%, #1f4d3d 55%, #153429 100%)";
 const SECTORS = ["Pharmaceuticals", "Nutraceuticals", "Cosmetics", "Food & Beverages"];
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -83,11 +85,11 @@ export default function Hero() {
 
       {/* The finished hero: a sage panel that opens like an iris from the capsule, with a soft out-of-focus laboratory behind it */}
       <motion.div aria-hidden className="absolute inset-x-0 top-0 bottom-0 -z-10 overflow-hidden rounded-b-[2rem] md:rounded-b-[3rem]"
-        style={{ background: "radial-gradient(70% 80% at 62% 38%, #b9c0b8 0%, #a7aea6 55%, #98a097 100%)" }}
+        style={{ background: HERO_BG }}
         initial={{ clipPath: "circle(0% at 68% 50%)" }} animate={{ clipPath: shown ? "circle(150% at 68% 50%)" : "circle(0% at 68% 50%)" }} transition={{ duration: 2.4, ease: [0.65, 0, 0.2, 1] }}>
-        <div className="absolute inset-0 opacity-[.95]"><HeroLabBackdrop /></div>
+        <div className="absolute inset-0 opacity-[.4]"><HeroLabBackdrop /></div>
         <div className="sun-shafts absolute inset-0 opacity-60 mix-blend-soft-light" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgba(26,36,28,.38)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgba(4,14,10,.5)_100%)]" />
         {/* one slow sweep of light as the hero lands */}
         <motion.div className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent"
           initial={{ x: "-40%" }} animate={{ x: shown ? "460%" : "-40%" }} transition={{ duration: 3.2, delay: 1.2, ease: "easeInOut" }} />
