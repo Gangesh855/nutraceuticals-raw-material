@@ -1,7 +1,7 @@
 # GK Botanical
 
 Cinematic site for GK Botanical, a standardized botanical extract manufacturer.
-Next.js 15 (App Router) · React 19 · Lenis smooth scroll. Deploys to Cloudflare Workers via OpenNext.
+Next.js 15 (App Router) · React 19 · Lenis smooth scroll. Type: Cormorant Garamond (display) + Alegreya (body). Deploys to Cloudflare Workers via OpenNext.
 
 ```bash
 npm install
@@ -13,7 +13,7 @@ npm run lint     # type-check
 Deploy to Cloudflare: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)
 
 ## Structure
-- `app/` — layout (Inter via `next/font`), the single page, global CSS (`globals.css` holds the whole design)
+- `app/` — layout (Cormorant Garamond + Alegreya via `next/font`), the single page, global CSS (`globals.css` holds the whole design)
 - `components/sections/` — one component per band: Header, Hero, Ticker, House, Library, Field, Approach, Process, Console, Quality, Atelier, Footer
 - `components/experience.ts` — client behaviour: scroll scenes, particle layer, ingredient flow, process tubes, CO₂ phase console, sample-request form. Mounted by `components/Experience.tsx`
 - `lib/botanicals.ts` — the 15 extracts (copy, specs, filters, optional footage)

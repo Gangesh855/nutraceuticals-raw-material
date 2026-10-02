@@ -8,10 +8,10 @@
   --cream:#E8DCC4;
   --sage:#A9B7AC;
   --absolute:#D9B86C;
-  --f-display:var(--font-sans),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-body:var(--font-sans),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-mono:var(--font-sans),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  /* GK Botanical type scale (Inter): desktop values, mobile below */
+  --f-display:var(--font-display),Georgia,"Times New Roman",serif;
+  --f-body:var(--font-body),Georgia,"Times New Roman",serif;
+  --f-mono:var(--font-body),Georgia,"Times New Roman",serif;
+  /* GK Botanical type scale: desktop values, mobile below */
   --t-display:64px;--t-h1:56px;--t-h2:40px;--t-h3:32px;--t-lead:20px;--t-body:16px;--t-small:14px;
   --gutter:clamp(16px,5vw,72px);
   --ease:cubic-bezier(.19,1,.22,1);
