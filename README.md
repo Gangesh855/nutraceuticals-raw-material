@@ -22,8 +22,7 @@ Deploy to Cloudflare: [`docs/CLOUDFLARE.md`](docs/CLOUDFLARE.md)
 - `field.mp4` / `field.jpg` — scroll-scrubbed field interlude
 - `<id>.mp4` + `<id>.jpg` (video) or `<id>.jpg` (still) — shown on a library card while it is in focus.
   Set `clip: { kind: 'video' | 'image', file: '<id>' }` on the extract in `lib/botanicals.ts`.
-  Present: amla, grapeseed, greentea, marigold, mustard, pomegranate, quercetin, turmeric (video); ashwa, boswellia, fenugreek, milkthistle, reishi (still).
-  Still to add: ginkgo, goji.
+  Present: amla, grapeseed, greentea, marigold, mustard, pomegranate, quercetin, turmeric (video); ashwa, boswellia, fenugreek, milkthistle, reishi, ginkgo, goji (still).
 
 ## Before launch
 - The sample request form drafts a message and copies it; nothing is sent. Replace `samples@gkbotanical.example` (Atelier and Footer) with a real address, or wire the form to an endpoint.
