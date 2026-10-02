@@ -16,7 +16,7 @@ The repo root is configured for Cloudflare Workers with the [OpenNext adapter](h
    - **Deploy command:** the default `npx wrangler deploy` (it delegates to `opennextjs-cloudflare deploy`)
 4. **Build variables** (Settings → Build → Variables and secrets): `NEXT_PUBLIC_SITE_URL` = your final URL, e.g. `https://www.gkbotanicals.com`
    (used at build time for the metadata base URL).
-6. Save and deploy. Add a custom domain under **Settings → Domains & Routes**.
+5. Save and deploy. Add a custom domain under **Settings → Domains & Routes**.
 
 Every push to `main` then builds and deploys automatically; other branches get preview builds.
 
@@ -25,7 +25,7 @@ Every push to `main` then builds and deploys automatically; other branches get p
 npm run preview   # opennextjs-cloudflare build + run in the local Workers runtime (workerd)
 npm run deploy    # manual deploy with Wrangler (needs `wrangler login` or CLOUDFLARE_API_TOKEN)
 ```
-For local secrets create `.dev.vars` (git-ignored) with the same three variables.
+
 
 ## Notes
 - `next/image` optimisation uses the Cloudflare **Images binding** (`IMAGES` in `wrangler.jsonc`), billed per unique
