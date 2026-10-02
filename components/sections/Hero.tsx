@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import HeroBackdrop from "@/components/sections/HeroBackdrop";
+import HeroLabBackdrop from "@/components/sections/HeroLabBackdrop";
 import HeroIntro from "@/components/sections/HeroIntro";
 import { makeSeq } from "@/lib/heroSeq";
 import { webglOK } from "@/components/three/SafeCanvas";
@@ -82,12 +83,11 @@ export default function Hero() {
     <section id="top" className="relative isolate flex min-h-[100svh] items-end overflow-hidden section pb-16 pt-[22rem] md:items-center md:pb-0 md:pt-28">
       <div className="absolute inset-0 -z-20"><HeroBackdrop slides={SLIDES} index={0} /></div>
 
-      {/* The finished hero: a sage panel that opens like an iris from the capsule, with a soft out-of-focus botanical behind it */}
+      {/* The finished hero: a sage panel that opens like an iris from the capsule, with a soft out-of-focus laboratory behind it */}
       <motion.div aria-hidden className="absolute inset-x-0 top-0 bottom-0 -z-10 overflow-hidden rounded-b-[2rem] md:rounded-b-[3rem]"
         style={{ background: "radial-gradient(70% 80% at 62% 38%, #b9c0b8 0%, #a7aea6 55%, #98a097 100%)" }}
         initial={{ clipPath: "circle(0% at 68% 50%)" }} animate={{ clipPath: shown ? "circle(150% at 68% 50%)" : "circle(0% at 68% 50%)" }} transition={{ duration: 2.4, ease: [0.65, 0, 0.2, 1] }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/moringa.webp" alt="" className="kb absolute inset-0 h-full w-full scale-110 object-cover opacity-[.15] mix-blend-multiply blur-[14px]" />
+        <div className="absolute inset-0 opacity-[.95]"><HeroLabBackdrop /></div>
         <div className="sun-shafts absolute inset-0 opacity-60 mix-blend-soft-light" />
         <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgba(26,36,28,.38)_100%)]" />
         {/* one slow sweep of light as the hero lands */}
@@ -129,7 +129,7 @@ export default function Hero() {
           <a href="/#products" className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[#1f2a1f] transition-transform hover:scale-[1.03]">Explore extracts</a>
           <a href="/#manufacturing" className="rounded-full px-5 py-3 text-sm font-medium text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline">See the process →</a>
         </motion.div>
-        <motion.ul aria-label="Industries we serve" initial={{ opacity: 0, y: 12 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 12 }} transition={{ delay: shown ? 1.3 : 0, duration: 1 }} className="mt-8 flex flex-wrap gap-2">
+        <motion.ul aria-label="Industries we serve" initial={{ opacity: 0, y: 12 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 12 }} transition={{ delay: shown ? 1.3 : 0, duration: 1 }} className="mt-8 flex flex-wrap gap-2 pr-16 md:pr-0">
           {SECTORS.map((x) => <li key={x} className="rounded-full border border-white/35 px-3 py-1 text-[11px] font-medium tracking-wide text-white/85">{x}</li>)}
         </motion.ul>
       </div>

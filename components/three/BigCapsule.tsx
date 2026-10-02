@@ -205,8 +205,8 @@ export default function BigCapsule({ seq, mouth }: Props) {
 
     const narrow = viewport.width / viewport.height < 1.2;
     const e = s.settle * s.settle * (3 - 2 * s.settle);
-    const tx = narrow ? 0 : (0.66 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.27) * viewport.height : (0.5 - 0.5) * viewport.height;
-    const tScale = narrow ? 0.4 : 0.9, sScale = narrow ? 0.85 : 1.05;
+    const tx = narrow ? 0 : (0.66 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.235) * viewport.height : (0.5 - 0.5) * viewport.height;
+    const tScale = narrow ? 0.36 : 0.9, sScale = narrow ? 0.85 : 1.05;
     const pop = 0.82 + 0.18 * s.capsuleIn;
     const sc = (sScale + (tScale - sScale) * e) * pop;
     g.visible = s.capsuleIn > 0.01;
