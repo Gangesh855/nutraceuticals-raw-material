@@ -46,9 +46,11 @@ export default function Hero() {
     const noGL = !gl; // the sequence is built around the 3D capsule; without WebGL show the finished hero straight away
     setAuto(!reduce); setMobile(window.matchMedia("(max-width: 767px)").matches);
     const t3d = setTimeout(() => setShow3d(!reduce), 250);
-    // The finished hero is the default. The opening sequence is opt-in: NEXT_PUBLIC_HERO_INTRO=1, or add ?intro to the URL.
-    const wantIntro = process.env.NEXT_PUBLIC_HERO_INTRO === "1" || new URLSearchParams(window.location.search).has("intro");
-    if (reduce || seen || noGL || !wantIntro) {
+    // The opening sequence plays on the first visit of a session; repeat visits go straight to the finished hero.
+    // NEXT_PUBLIC_HERO_INTRO=0 turns it off for everyone; ?intro replays it.
+    const replay = new URLSearchParams(window.location.search).has("intro");
+    const off = process.env.NEXT_PUBLIC_HERO_INTRO === "0";
+    if (reduce || noGL || off || (seen && !replay)) {
       Object.assign(seq.current, makeSeq(true)); setReveal(true); setPhase("done");
       return () => clearTimeout(t3d);
     }
