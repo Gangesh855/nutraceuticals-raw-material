@@ -6,12 +6,10 @@ import Timeline from "@/components/sections/Timeline";
 import Certifications from "@/components/sections/Certifications";
 import Blog from "@/components/sections/Blog";
 import Footer from "@/components/sections/Footer";
-import Preloader from "@/components/ui/Preloader";
 
 export default function Home() {
   return (
     <>
-      <Preloader />
       <Header />
       <main id="main">
         <Hero />
