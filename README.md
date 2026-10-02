@@ -20,7 +20,7 @@ Design concept: [`docs/DESIGN_CONCEPT.md`](docs/DESIGN_CONCEPT.md)
 - `app/` — routes (`/`, `/products/[slug]`, `/blog`, `/blog/[slug]`), `sitemap.ts`, `robots.ts`, JSON-LD schema
 - `components/sections/` — Header, Hero, Philosophy, Products, Timeline, Certifications, Blog, Footer
 - `components/three/` — R3F scenes (turmeric rhizome, capsule, molecule, particles); loaded lazily, client-only
-- `components/ui/` — Cursor, Preloader, MagneticButton, Reveal, SmoothScroll
+- `components/ui/` — Cursor, MagneticButton, Reveal, SmoothScroll
 - `lib/` — site config, product and blog content
 
 ## Before launch

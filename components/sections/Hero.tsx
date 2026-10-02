@@ -28,7 +28,7 @@ export default function Hero() {
   const [glOk, setGlOk] = useState(false);
   const tl = useRef<gsap.core.Timeline | null>(null);
 
-  // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise wait for the preloader.
+  // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise start the opening straight away.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seen = false;
@@ -45,11 +45,9 @@ export default function Hero() {
       Object.assign(seq.current, makeSeq(true)); setReveal(true); setPhase("done");
       return () => clearTimeout(t3d);
     }
-    const start = () => setPhase((p) => (p === "pending" ? "intro" : p));
-    if ((window as unknown as { __gkReady?: boolean }).__gkReady) start();
-    else window.addEventListener("gk:ready", start, { once: true });
-    const fallback = setTimeout(start, 5000);
-    return () => { clearTimeout(t3d); clearTimeout(fallback); window.removeEventListener("gk:ready", start); };
+    // no loading screen: the opening starts as soon as the page is ready
+    const start = setTimeout(() => setPhase((p) => (p === "pending" ? "intro" : p)), 60);
+    return () => { clearTimeout(t3d); clearTimeout(start); };
   }, []);
 
   // The opening sequence: close-ups → streams converge → capsule fills and glows → lab fades to glass → headline → settle.
