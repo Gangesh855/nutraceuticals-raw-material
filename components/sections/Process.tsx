@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Eyebrow, ProcessStage } from "@gk/ui";
 
 export default function Process() {
   return (
@@ -6,38 +7,34 @@ export default function Process() {
       <section id="process" className="process" data-scene aria-labelledby="procTitle">
         <div className="wrap process-pin">
           <div>
-            <p className="eyebrow" id="procTitle">The extraction train · Five stages</p>
+            <Eyebrow id="procTitle">The extraction train · Five stages</Eyebrow>
             <div className="stages">
-              <article className="stage on">
-                <span className="num">01</span><h3>Receive</h3>
-                <p className="big">Field to factory, traced.</p>
-                <p className="body">Every leaf, seed, berry, root and mushroom arrives with its origin and harvest date on the bag. Each lot is dried below 10 % moisture and matched by HPTLC against a voucher specimen before production can use it.</p>
-                <ul className="readings"><li><span>Moisture</span><b>≤ 10 %</b></li><li><span>Identity</span><b>HPTLC</b></li><li><span>Lot opened</span><b>Farm · plot · day</b></li></ul>
-              </article>
-              <article className="stage">
-                <span className="num">02</span><h3>Extract</h3>
-                <p className="big">A different solvent for every plant.</p>
-                <p className="body">Water and food-grade ethanol for most standardized extracts, supercritical CO₂ for oleoresins and fat-soluble actives, and a dedicated line for certified organic material.</p>
-                <ul className="readings"><li><span>Solvents</span><b>Water · ethanol · CO₂</b></li><li><span>CO₂ line</span><b>300 bar</b></li><li><span>Organic</span><b>Dedicated line</b></li></ul>
-              </article>
-              <article className="stage">
-                <span className="num">03</span><h3>Concentrate</h3>
-                <p className="big">Low heat, long patience.</p>
-                <p className="body">Extracts are concentrated under vacuum below 50 °C, then spray-dried into free-flowing powders or water-soluble grades that disperse clear in beverages and hold up through pasteurization.</p>
-                <ul className="readings"><li><span>Evaporation</span><b>&lt; 50 °C</b></li><li><span>Powders</span><b>80 mesh</b></li><li><span>Beverage grade</span><b>Water-soluble</b></li></ul>
-              </article>
-              <article className="stage">
-                <span className="num">04</span><h3>Standardize</h3>
-                <p className="big">Measured to the marker.</p>
-                <p className="body">HPLC quantifies the exact marker molecules against USP reference standards, ICP-MS checks heavy metals and LC-MS/MS screens for pesticide residues. Each batch is adjusted to its label claim before release.</p>
-                <ul className="readings"><li><span>Actives</span><b>HPLC</b></li><li><span>Metals</span><b>ICP-MS</b></li><li><span>Residues</span><b>LC-MS/MS</b></li></ul>
-              </article>
-              <article className="stage">
-                <span className="num">05</span><h3>Release</h3>
-                <p className="big">Signed, sealed, retained.</p>
-                <p className="body">Every drum ships with its certificate of analysis. A retained sample of each batch stays in our vault for its full shelf life plus one year, so any question can be answered from the original material.</p>
-                <ul className="readings"><li><span>Certificate</span><b>1 per batch</b></li><li><span>Packing</span><b>Amber · N₂</b></li><li><span>Retained</span><b>Shelf life + 1&nbsp;yr</b></li></ul>
-              </article>
+              <ProcessStage
+                number="01" title="Receive" headline="Field to factory, traced."
+                body="Every leaf, seed, berry, root and mushroom arrives with its origin and harvest date on the bag. Each lot is dried below 10 % moisture and matched by HPTLC against a voucher specimen before production can use it."
+                readings={[{ label: "Moisture", value: "≤ 10 %" }, { label: "Identity", value: "HPTLC" }, { label: "Lot opened", value: "Farm · plot · day" }]}
+                active
+              />
+              <ProcessStage
+                number="02" title="Extract" headline="A different solvent for every plant."
+                body="Water and food-grade ethanol for most standardized extracts, supercritical CO₂ for oleoresins and fat-soluble actives, and a dedicated line for certified organic material."
+                readings={[{ label: "Solvents", value: "Water · ethanol · CO₂" }, { label: "CO₂ line", value: "300 bar" }, { label: "Organic", value: "Dedicated line" }]}
+              />
+              <ProcessStage
+                number="03" title="Concentrate" headline="Low heat, long patience."
+                body="Extracts are concentrated under vacuum below 50 °C, then spray-dried into free-flowing powders or water-soluble grades that disperse clear in beverages and hold up through pasteurization."
+                readings={[{ label: "Evaporation", value: "< 50 °C" }, { label: "Powders", value: "80 mesh" }, { label: "Beverage grade", value: "Water-soluble" }]}
+              />
+              <ProcessStage
+                number="04" title="Standardize" headline="Measured to the marker."
+                body="HPLC quantifies the exact marker molecules against USP reference standards, ICP-MS checks heavy metals and LC-MS/MS screens for pesticide residues. Each batch is adjusted to its label claim before release."
+                readings={[{ label: "Actives", value: "HPLC" }, { label: "Metals", value: "ICP-MS" }, { label: "Residues", value: "LC-MS/MS" }]}
+              />
+              <ProcessStage
+                number="05" title="Release" headline="Signed, sealed, retained."
+                body="Every drum ships with its certificate of analysis. A retained sample of each batch stays in our vault for its full shelf life plus one year, so any question can be answered from the original material."
+                readings={[{ label: "Certificate", value: "1 per batch" }, { label: "Packing", value: "Amber · N₂" }, { label: "Retained", value: "Shelf life + 1 yr" }]}
+              />
             </div>
           </div>
           <ol className="tubes" aria-label="Jump to stage">

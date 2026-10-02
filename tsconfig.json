@@ -25,7 +25,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@gk/ui": ["./design-system/src/index.ts"]
     }
   },
   "include": [
@@ -36,7 +37,6 @@
   ],
   "exclude": [
     "node_modules",
-    "astro-landing",
     "open-next.config.ts"
   ]
 }

@@ -1,10 +1,12 @@
+import { Button, Eyebrow, FormField } from "@gk/ui";
+
 export default function Atelier() {
   return (
   <>
       <section id="atelier" className="atelier" aria-labelledby="atTitle">
         <div className="wrap atelier-grid band">
           <div className="at-copy">
-            <p className="eyebrow">The atelier</p>
+            <Eyebrow>The atelier</Eyebrow>
             <h2 id="atTitle" data-split>Begin with <strong>a sample</strong></h2>
             <p className="sec-copy">Tell us what you're formulating. We send 50–100 g samples with a specification sheet and full certificate of analysis, usually within ten working days.</p>
             <dl className="at-facts">
@@ -16,28 +18,18 @@ export default function Atelier() {
           </div>
           <div>
             <form className="form" id="reqForm">
-              <div className="field"><label htmlFor="fName">Name</label><input id="fName" name="name" autoComplete="name" required /></div>
-              <div className="field"><label htmlFor="fCompany">Company</label><input id="fCompany" name="company" autoComplete="organization" required /></div>
-              <div className="field full"><label htmlFor="fEmail">Work email</label><input id="fEmail" name="email" type="email" autoComplete="email" required /></div>
-              <div className="field"><label htmlFor="fApp">Application</label>
-                <select id="fApp" name="application" required>
-                  <option value="">Choose one</option>
-                  <option>Nutraceuticals &amp; supplements</option><option>Functional beverages &amp; RTDs</option><option>Food</option><option>Personal care &amp; cosmetics</option><option>Animal &amp; aquatic health</option><option>Custom specialty ingredient</option>
-                </select>
-              </div>
-              <div className="field"><label htmlFor="fVol">Annual volume</label>
-                <select id="fVol" name="volume" required>
-                  <option value="">Choose one</option>
-                  <option>Under 100 kg</option><option>100 kg – 1 t</option><option>1–10 t</option><option>Over 10 t</option>
-                </select>
-              </div>
+              <FormField id="fName" label="Name" name="name" autoComplete="name" required />
+              <FormField id="fCompany" label="Company" name="company" autoComplete="organization" required />
+              <FormField id="fEmail" label="Work email" name="email" type="email" autoComplete="email" required full />
+              <FormField kind="select" id="fApp" label="Application" name="application" required options={["Nutraceuticals & supplements", "Functional beverages & RTDs", "Food", "Personal care & cosmetics", "Animal & aquatic health", "Custom specialty ingredient"]} />
+              <FormField kind="select" id="fVol" label="Annual volume" name="volume" required options={["Under 100 kg", "100 kg – 1 t", "1–10 t", "Over 10 t"]} />
               <fieldset>
                 <legend>Botanicals</legend>
                 <div className="chips" id="chips"></div>
                 <p className="hint" id="chipsEmpty">None selected yet. Add from <a href="#library">the library</a>, or describe what you need below.</p>
               </fieldset>
-              <div className="field full"><label htmlFor="fNotes">Notes</label><textarea id="fNotes" name="notes" placeholder="Target specification, carrier preferences, timelines" /></div>
-              <div className="submit-row"><button className="btn" type="submit">Draft my request</button><small>Nothing is sent until you choose to.</small></div>
+              <FormField kind="textarea" id="fNotes" label="Notes" name="notes" placeholder="Target specification, carrier preferences, timelines" full />
+              <div className="submit-row"><Button type="submit">Draft my request</Button><small>Nothing is sent until you choose to.</small></div>
             </form>
             <div className="done" id="reqDone" tabIndex={-1} hidden>
               <p className="eyebrow">Request drafted</p>

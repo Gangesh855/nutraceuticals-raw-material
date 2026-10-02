@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { CustomSpecialtyCard, Eyebrow, SpecimenCard } from "@gk/ui";
 import { BOTANICALS, CATS, CAT_DESC } from "@/lib/botanicals";
 
 export default function Library() {
@@ -7,7 +7,7 @@ export default function Library() {
       <section id="library" className="library" data-scene aria-labelledby="libTitle">
         <div className="lib-pin">
           <div className="wrap lib-head">
-            <div><p className="eyebrow">Ingredients · Fifteen standardized extracts</p><h2 id="libTitle" data-split>Specimens <strong>in glass</strong></h2></div>
+            <div><Eyebrow>Ingredients · Fifteen standardized extracts</Eyebrow><h2 id="libTitle" data-split>Specimens <strong>in glass</strong></h2></div>
             <div>
               <div className="filters" role="group" aria-label="Filter by application">
                 <button type="button" data-f="all" aria-pressed="true">All</button>
@@ -22,41 +22,24 @@ export default function Library() {
           </div>
           <div className="lib-viewport" id="libView"><div className="track" id="grid">
             {BOTANICALS.map((b) => (
-              <article className="specimen" data-cats={b.cats.join(" ")} key={b.id}>
-                <div className={`plinth${b.clip ? " has-media" : ""}`} style={{ "--liquid": b.color, "--level": b.level } as CSSProperties} aria-hidden="true">
-                  {b.clip?.kind === "video" && (
-                    <video className="pv" muted loop playsInline preload="none" poster={`/media/${b.clip.file}.jpg`}>
-                      <source src={`/media/${b.clip.file}.mp4`} type="video/mp4" />
-                    </video>
-                  )}
-                  {b.clip?.kind === "image" && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className="pv pi" src={`/media/${b.clip.file}.jpg`} alt="" loading="lazy" decoding="async" />
-                  )}
-                  <div className="vial powder"><span className="cap"></span><span className="glass"><span className="liquid"></span><span className="shine"></span></span></div>
-                </div>
-                <p className="latin">{b.latin}</p>
-                <h3>{b.name}</h3>
-                <p className="desc">{b.desc}</p>
-                <dl className="spec">
-                  <div><dt>Part</dt><dd>{b.part}</dd></div>
-                  <div><dt>Actives</dt><dd>{b.actives}</dd></div>
-                  <div><dt>Standard</dt><dd>{b.std}</dd></div>
-                  <div><dt>Supports</dt><dd>{b.supports}</dd></div>
-                </dl>
-                <p className="tags">{b.cats.map((c) => CATS[c]).join(" · ")}</p>
-                <button type="button" className="btn ghost add" data-id={b.id} aria-pressed="false">Add to sample request</button>
-              </article>
+              <SpecimenCard
+                key={b.id}
+                id={b.id}
+                name={b.name}
+                latin={b.latin}
+                description={b.desc}
+                part={b.part}
+                actives={b.actives}
+                standard={b.std}
+                supports={b.supports}
+                categories={b.cats.map((c) => CATS[c])}
+                filterKeys={b.cats}
+                color={b.color}
+                level={b.level}
+                clip={b.clip}
+              />
             ))}
-            <article className="custom">
-              <div>
-                <p className="eyebrow">Custom specialty</p>
-                <h3>Your specification, developed in our lab</h3>
-                <p className="body">Need a marker, ratio, solubility or carrier we don&apos;t list? Our R&amp;D team develops pharmaceutical-grade extracts to your brief and validates the actives by HPLC.</p>
-                <ul><li>Custom markers and ratios</li><li>Water-soluble and beadlet grades</li><li>Clean-label carriers</li></ul>
-              </div>
-              <a className="btn" href="#atelier">Brief our R&amp;D team</a>
-            </article>
+            <CustomSpecialtyCard />
           </div></div>
           <div className="wrap lib-foot">
             <span className="lib-count" aria-live="polite"><b id="libNow">01</b>&nbsp;/&nbsp;<span id="libTotal">{String(BOTANICALS.length).padStart(2, "0")}</span></span>
