@@ -47,6 +47,7 @@ function haloTexture() {
 }
 
 // Same five-colour ramp as the liquid shader (moringa, turmeric, ginger, bacopa, boswellia), bottom → top.
+const MATTE = new THREE.Color("#dcded9");
 const RAMP = ["#45c26e", "#f59a17", "#efca4d", "#7fd871", "#e6850d"].map((c) => new THREE.Color(c));
 const rampAt = (h: number, out: THREE.Color) => {
   const x = Math.min(0.9999, Math.max(0, h)) * 4, i = Math.floor(x);
@@ -66,6 +67,7 @@ function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const coloured = useRef(false);
   useFrame((state) => {
     const m = ref.current; if (!m) return;
+    m.visible = seq.current.settle < 0.5;
     if (!coloured.current) {
       data.forEach((d, i) => m.setColorAt(i, rampAt((d.y + 1) / 2, col)));
       (m.instanceColor as THREE.InstancedBufferAttribute).needsUpdate = true;
@@ -109,7 +111,33 @@ function Powder({ seq }: { seq: React.MutableRefObject<Seq> }) {
     });
     pos.needsUpdate = true;
   });
-  return <points geometry={geo} renderOrder={4}><pointsMaterial ref={mat} color="#f3e6b0" size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} /></points>;
+  return <points geometry={geo} renderOrder={4} frustumCulled={false}><pointsMaterial ref={mat} color="#f3e6b0" size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} /></points>;
+}
+
+/** Grey powder heaped in the open lower half, shown once the hero has settled (the "split capsule" pose). */
+function Mound({ seq }: { seq: React.MutableRefObject<Seq> }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const N = 220;
+  const data = useMemo(() => Array.from({ length: N }, () => {
+    const a = Math.random() * 6.28, rr = Math.pow(Math.random(), 0.7), r = rr * 0.5;
+    return { x: Math.cos(a) * r, z: Math.sin(a) * r, y: 0.04 + (1 - rr) * 0.36 * (0.4 + Math.random() * 0.8), s: 0.02 + Math.random() * 0.04 };
+  }), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const done = useRef(false);
+  useFrame(() => {
+    const m = ref.current; if (!m) return;
+    const e = Math.max(0, seq.current.settle - 0.5) * 2;
+    m.visible = e > 0.01;
+    if (done.current && e >= 1) return;
+    data.forEach((d, i) => { dummy.position.set(d.x, d.y, d.z); dummy.scale.setScalar(d.s * e); dummy.updateMatrix(); m.setMatrixAt(i, dummy.matrix); });
+    m.instanceMatrix.needsUpdate = true; done.current = e >= 1;
+  });
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, N]} renderOrder={1} visible={false}>
+      <icosahedronGeometry args={[1, 0]} />
+      <meshStandardMaterial color="#8c918a" roughness={0.95} metalness={0} />
+    </instancedMesh>
+  );
 }
 
 /** Thin dotted orbit rings around the finished capsule. */
@@ -171,32 +199,34 @@ export default function BigCapsule({ seq, mouth }: Props) {
     const g = group.current, sp = spin.current; if (!g || !sp) return;
     const s = seq.current, t = state.clock.elapsedTime;
     const k = Math.min(1, Math.max(0, (s.fill - 0.42) / 0.28)); // closes between 42 % and 70 % full
-    if (cap.current) { const lift = 1 - k * k * (3 - 2 * k); cap.current.position.y = 1.05 * lift; cap.current.rotation.z = 0.2 * lift * Math.sin(t * 0.8 + 1); }
+    if (cap.current) { const lift = 1 - k * k * (3 - 2 * k); const es = s.settle * s.settle * (3 - 2 * s.settle); cap.current.position.y = Math.max(1.05 * lift, 0.62 * es); cap.current.rotation.z = 0.2 * lift * Math.sin(t * 0.8 + 1); }
     pointer.current.x += (state.pointer.x - pointer.current.x) * 0.05;
     pointer.current.y += (state.pointer.y - pointer.current.y) * 0.05;
 
     const narrow = viewport.width / viewport.height < 1.2;
     const e = s.settle * s.settle * (3 - 2 * s.settle);
-    const tx = narrow ? 0 : (0.74 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.225) * viewport.height : (0.5 - 0.4) * viewport.height;
-    const tScale = narrow ? 0.44 : 0.86, sScale = narrow ? 0.85 : 1.05;
+    const tx = narrow ? 0 : (0.66 - 0.5) * viewport.width, ty = narrow ? (0.5 - 0.27) * viewport.height : (0.5 - 0.5) * viewport.height;
+    const tScale = narrow ? 0.4 : 0.9, sScale = narrow ? 0.85 : 1.05;
     const pop = 0.82 + 0.18 * s.capsuleIn;
     const sc = (sScale + (tScale - sScale) * e) * pop;
     g.visible = s.capsuleIn > 0.01;
     g.scale.setScalar(sc);
     g.position.set(tx * e + pointer.current.x * 0.25, ty * e + Math.sin(t * 0.9) * 0.07 + pointer.current.y * 0.15, 0);
-    sp.rotation.y = t * 0.3 + pointer.current.x * 0.5;
+    sp.rotation.y = t * 0.3 * (1 - e) + Math.sin(t * 0.4) * 0.22 * e + pointer.current.x * 0.4;
     sp.rotation.x = 0.06 + pointer.current.y * 0.12;
-    g.rotation.z = 0.2 + pointer.current.x * 0.08;
+    g.rotation.z = 0.2 + pointer.current.x * 0.08 - 0.06 * e;
 
     // liquid level in world space (stays horizontal while the capsule tilts)
     const wy = g.position.y, h = CAP_LEN * sc, bottom = wy - h / 2 + 0.07 * sc, height = h - 0.14 * sc;
     const u = liqMat.uniforms;
     u.uBottom.value = bottom; u.uHeight.value = height; u.uLevel.value = bottom + s.fill * height * 1.03 - (s.fill <= 0 ? 1 : 0);
     u.uTime.value = t; u.uGlow.value = s.glow;
-    shellMat.opacity = 0.4 * s.capsuleIn;
+    shellMat.opacity = (0.4 + 0.58 * e) * s.capsuleIn;
+    shellMat.roughness = 0.16 + 0.5 * e; shellMat.clearcoat = 1 - 0.85 * e; shellMat.envMapIntensity = 2.4 - 1.9 * e; shellMat.color.set("#eef8f2").lerp(MATTE, e);
+    u.uLevel.value = e > 0.6 ? -9 : u.uLevel.value;
     // illumination
-    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn; }
-    if (light.current) light.current.intensity = 1 + s.glow * 26;
+    if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn * (1 - e); }
+    if (light.current) light.current.intensity = (1 + s.glow * 26) * (1 - 0.9 * e);
     mouth.current.set(g.position.x, wy + (CAP_LEN * sc) / 2 + 0.12, 0);
   });
 
@@ -208,6 +238,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
         <mesh geometry={liquid} material={liqMat} renderOrder={1} />
         <Contents seq={seq} />
         <Powder seq={seq} />
+        <Mound seq={seq} />
         {/* seam where the two halves meet */}
         <mesh rotation={[Math.PI / 2, 0, 0]} renderOrder={3}>
           <torusGeometry args={[R * 1.035, 0.013, 12, 72]} />
@@ -216,7 +247,6 @@ export default function BigCapsule({ seq, mouth }: Props) {
         <group ref={cap}><mesh geometry={shellA} material={shellMat} position={[0, -0.05, 0]} renderOrder={2} /></group>
         <mesh geometry={shellB} material={shellMat} position={[0, 0.05, 0]} rotation={[Math.PI, 0, 0]} renderOrder={2} />
       </group>
-      <OrbitRings seq={seq} />
     </group>
   );
 }

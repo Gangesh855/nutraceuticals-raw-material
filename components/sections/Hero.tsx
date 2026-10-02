@@ -1,13 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { gsap } from "gsap";
-import MagneticButton from "@/components/ui/MagneticButton";
 import HeroBackdrop from "@/components/sections/HeroBackdrop";
 import HeroIntro from "@/components/sections/HeroIntro";
-import HeroCallouts from "@/components/sections/HeroCallouts";
 import { makeSeq } from "@/lib/heroSeq";
 import { webglOK } from "@/components/three/SafeCanvas";
 import { PRODUCTS } from "@/lib/products";
@@ -17,7 +14,6 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: f
 // The botanicals shown in the hero loop (order = playback order).
 const SLIDE_SLUGS = ["moringa", "ashwagandha", "turmeric-curcumin", "bacopa", "ginger", "boswellia"];
 const SLIDES = SLIDE_SLUGS.map((s) => PRODUCTS.find((p) => p.slug === s)!);
-const SLIDE_MS = 7000;
 const WORDS = ["Pure", "Botanicals,", "Precision", "Manufacturing."];
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -28,14 +24,7 @@ export default function Hero() {
   const [show3d, setShow3d] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [glOk, setGlOk] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [auto, setAuto] = useState(true);
   const tl = useRef<gsap.core.Timeline | null>(null);
-  const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
-  const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
-  const bgX = useTransform(mx, (v) => v * -10), bgY = useTransform(my, (v) => v * -6);
-  const panelX = useTransform(mx, (v) => v * 8), panelY = useTransform(my, (v) => v * 6);
 
   // Decide how to start: skip the opening for reduced motion or repeat visits, otherwise wait for the preloader.
   useEffect(() => {
@@ -44,7 +33,7 @@ export default function Hero() {
     try { seen = sessionStorage.getItem("gkIntro") === "1"; } catch { /* storage blocked: treat as first visit */ }
     const gl = webglOK(); setGlOk(gl);
     const noGL = !gl; // the sequence is built around the 3D capsule; without WebGL show the finished hero straight away
-    setAuto(!reduce); setMobile(window.matchMedia("(max-width: 767px)").matches);
+    setMobile(window.matchMedia("(max-width: 767px)").matches);
     const t3d = setTimeout(() => setShow3d(!reduce), 250);
     // The opening sequence plays on the first visit of a session; repeat visits go straight to the finished hero.
     // NEXT_PUBLIC_HERO_INTRO=0 turns it off for everyone; ?intro replays it.
@@ -85,91 +74,53 @@ export default function Hero() {
 
   const skip = () => { tl.current?.timeScale(9); };
 
-  // Autoplay through the botanicals once the opening has finished; pauses on hover/focus and when the tab is hidden.
-  useEffect(() => {
-    if (!auto || paused || phase !== "done") return;
-    const id = setInterval(() => { if (!document.hidden) setIndex((i) => (i + 1) % SLIDES.length); }, SLIDE_MS);
-    return () => clearInterval(id);
-  }, [auto, paused, index, phase]);
-
-  const cur = SLIDES[index];
   const shown = reveal || phase === "done";
   const intro = phase === "intro";
 
   return (
-    <section id="top" className="relative isolate flex min-h-[100svh] items-center overflow-hidden section pb-20 pt-[22rem] md:pb-0 md:pt-28"
-      onPointerMove={(e) => { mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
-      <motion.div style={{ x: bgX, y: bgY, scale: 1.04 }} className="absolute inset-0 -z-20">
-        <HeroBackdrop slides={SLIDES} index={index} />
-      </motion.div>
+    <section id="top" className="relative isolate flex min-h-[100svh] items-end overflow-hidden section pb-16 pt-[22rem] md:items-center md:pb-0 md:pt-28">
+      <div className="absolute inset-0 -z-20"><HeroBackdrop slides={SLIDES} index={0} /></div>
+
+      {/* The finished hero: a calm sage panel with soft light, rounded at the bottom */}
+      <motion.div aria-hidden className="absolute inset-x-0 top-0 bottom-0 -z-10 rounded-b-[2rem] md:rounded-b-[3rem]"
+        style={{ background: "radial-gradient(70% 80% at 62% 38%, #b9c0b8 0%, #a7aea6 55%, #98a097 100%)" }}
+        initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1.6, ease: "easeInOut" }} />
 
       {/* Opening sequence: close-ups of materials being processed (lab look) */}
       {intro && <HeroIntro seq={seq} />}
 
-      {/* WebGL: extract streams, the large filling capsule, floating accents */}
+      {/* WebGL: the large capsule (clear while filling, matte and split once settled) */}
       <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>{show3d && <HeroScene seq={seq} mobile={mobile} />}</div>
 
-      <HeroCallouts show={shown && glOk && show3d} />
-
-      <div className="relative z-10 max-w-4xl">
-        <motion.p className="eyebrow mb-6" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>GK Botanicals · Extract Manufacturer</motion.p>
+      <div className="relative z-30 max-w-2xl md:pb-24 md:pt-24">
+        <motion.span className="mb-5 inline-block rounded-full bg-[#d6f5a8] px-2.5 py-1 text-[11px] font-medium text-[#1d3a12]" initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1 }}>
+          Extract manufacturer
+        </motion.span>
         {/* Headline stays in the DOM from first paint (crawlable); only its visual reveal is animated */}
-        <h1 className="h-display text-[10vw] md:text-[5.2vw] lg:text-[5.4vw]">
+        <h1 className="font-sans text-[9vw] font-light leading-[1.08] tracking-[-0.025em] text-white md:text-[3.3vw] lg:text-[3.4vw]">
           {WORDS.map((w, i) => (
             <span key={w}>
-              <span className="inline-block overflow-hidden align-bottom pr-[.25em]">
-                <motion.span className={`inline-block ${i === 2 ? "italic text-gold-200" : ""}`} initial={{ y: "110%" }} animate={{ y: shown ? 0 : "110%" }} transition={{ duration: 1.2, delay: shown ? i * 0.12 : 0, ease: EASE }}>{w}</motion.span>
+              <span className="inline-block overflow-hidden align-bottom pr-[.2em]">
+                <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: shown ? 0 : "110%" }} transition={{ duration: 1.2, delay: shown ? i * 0.12 : 0, ease: EASE }}>{w}</motion.span>
               </span>{" "}
               {i === 1 && <br className="hidden md:block" />}
             </span>
           ))}
         </h1>
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 20 }} transition={{ delay: shown ? 0.7 : 0, duration: 1 }} className="mt-8 max-w-xl text-lg text-ivory/75">
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 20 }} transition={{ delay: shown ? 0.7 : 0, duration: 1 }} className="mt-5 max-w-md text-[15px] leading-relaxed text-white/80">
           Standardised extracts. Full traceability. Compliance built into every batch — for the world&apos;s leading nutraceutical brands.
         </motion.p>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ delay: shown ? 1 : 0, duration: 1 }} className={`mt-10 flex flex-wrap items-center gap-6 ${shown ? "" : "pointer-events-none"}`}>
-          <MagneticButton href="/#products" variant="gold">Explore Extracts →</MagneticButton>
-          <MagneticButton href="/#manufacturing" variant="ghost">See the process</MagneticButton>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ delay: shown ? 1 : 0, duration: 1 }} className={`mt-8 flex flex-wrap items-center gap-3 ${shown ? "" : "pointer-events-none"}`}>
+          <a href="/#products" className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[#1f2a1f] transition-transform hover:scale-[1.03]">Explore extracts</a>
+          <a href="/#manufacturing" className="rounded-full px-5 py-3 text-sm font-medium text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline">See the process →</a>
         </motion.div>
       </div>
-
-      {/* Compact glass panel: the botanical currently featured */}
-      <motion.aside
-        style={{ x: panelX, y: panelY }}
-        initial={{ opacity: 0, y: 30 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 30 }} transition={{ delay: shown ? 1.2 : 0, duration: 1.1 }}
-        onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}
-        aria-label="Featured botanical"
-        className={`glass glow-edge absolute bottom-10 right-6 z-30 hidden w-[21rem] p-5 lg:block xl:right-20 ${shown ? "" : "pointer-events-none"}`}
-      >
-        <p className="eyebrow">Now featuring</p>
-        <AnimatePresence mode="wait">
-          <motion.div key={cur.slug} initial={{ opacity: 0, y: 12, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -8, filter: "blur(6px)" }} transition={{ duration: 0.5 }}>
-            <h2 className="mt-1.5 font-display text-3xl leading-none">{cur.name}</h2>
-                        <dl className="mt-3 space-y-1 font-mono text-[11px]">
-              <div className="flex justify-between gap-4"><dt className="text-ivory/50">Marker</dt><dd className="text-right text-gold-200">{cur.marker}</dd></div>
-              <div className="flex justify-between gap-4"><dt className="text-ivory/50">Spec</dt><dd className="text-right text-gold-200">{cur.spec}</dd></div>
-            </dl>
-            <Link href={`/products/${cur.slug}`} className="mt-2 inline-block py-2 font-mono text-[11px] uppercase tracking-[.2em] text-emerald-400 transition-colors hover:text-gold-200">View spec sheet →</Link>
-          </motion.div>
-        </AnimatePresence>
-        <div className="mt-1 flex gap-1.5" role="tablist" aria-label="Choose botanical">
-          {SLIDES.map((s, i) => (
-            <button key={s.slug} role="tab" aria-selected={i === index} aria-label={s.name} onClick={() => setIndex(i)} className="group relative h-6 flex-1">
-              <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 overflow-hidden rounded bg-white/15">
-                <span className="block h-full origin-left rounded bg-gold-400"
-                  style={i < index ? { transform: "scaleX(1)" } : i === index ? { transform: "scaleX(1)", animation: auto && !paused && phase === "done" ? `fill ${SLIDE_MS}ms linear` : undefined } : { transform: "scaleX(0)" }} />
-              </span>
-            </button>
-          ))}
-        </div>
-      </motion.aside>
 
       {intro && (
         <button type="button" onClick={skip} className="absolute right-6 top-24 z-40 rounded-full border border-white/20 bg-black/30 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-ivory/80 backdrop-blur-md transition-colors hover:text-gold-200 md:right-12 lg:right-20">
           Skip intro
         </button>
       )}
-      <div className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 font-mono text-[10px] uppercase tracking-[.3em] text-ivory/40 md:block">Scroll ↓</div>
     </section>
   );
 }
