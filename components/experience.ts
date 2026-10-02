@@ -16,6 +16,7 @@ export function startExperience(): () => void {
   const observers: IntersectionObserver[] = [];
   const timers: number[] = [];
   let lenis: Lenis | null = null;
+  const cleanups: Array<() => void> = [];
   let raf = 0;
 
   // Record every listener added during setup so cleanup can remove them again.
@@ -114,6 +115,7 @@ export function startExperience(): () => void {
     chipsEmpty.hidden = picked.size > 0;
     trayN.hidden = picked.size === 0;
     trayN.textContent = picked.size;
+    if (!reduce) { trayN.classList.remove('bump'); void trayN.offsetWidth; trayN.classList.add('bump'); }
   }
   grid.addEventListener('click', e => {
     const b = e.target.closest('.add'); if (!b) return;
@@ -450,6 +452,63 @@ export function startExperience(): () => void {
   }
   addEventListener('resize', onResize);
   onResize();
+
+  /* ---------- Motion layer: reveals, count-up figures, magnetic buttons, nav highlight, back to top ---------- */
+  if (!reduce) {
+    const REVEAL = ['.facts > div', '.tests .test', '.certs li', '.at-facts > div', '.foot-grid > div', '.form > .field', '.form > fieldset', '.form > .submit-row', '.tag-line'];
+    const countUp = (el) => {
+      const m = /^(\d+(?:\.\d+)?)(\s*%?)$/.exec(el.textContent.trim());
+      if (!m) return;
+      const to = parseFloat(m[1]), dec = (m[1].split('.')[1] || '').length, t0 = performance.now(), dur = 1400;
+      const tick = (now) => {
+        if (dead) return;
+        const k = clamp((now - t0) / dur), v = to * (1 - Math.pow(1 - k, 3));
+        el.textContent = v.toFixed(dec) + m[2];
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      el.textContent = (0).toFixed(dec) + m[2];
+      requestAnimationFrame(tick);
+    };
+    const revealIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); revealIO.unobserve(e.target);
+      const dt = e.target.matches('.facts > div') ? e.target.querySelector('dt') : null;
+      if (dt) countUp(dt);
+    }), { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+    observers.push(revealIO);
+    REVEAL.forEach(sel => document.querySelectorAll(sel).forEach((el, i) => {
+      el.setAttribute('data-reveal', '');
+      el.style.setProperty('--rd', ((i % 6) * .07).toFixed(2) + 's');
+      revealIO.observe(el);
+    }));
+
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) { // buttons and links lean toward the pointer
+      document.querySelectorAll('.btn:not(.add), .textlink').forEach(el => {
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          el.style.setProperty('--mx', ((e.clientX - r.left - r.width / 2) * .22).toFixed(1) + 'px');
+          el.style.setProperty('--my', ((e.clientY - r.top - r.height / 2) * .32).toFixed(1) + 'px');
+        });
+        el.addEventListener('pointerleave', () => { el.style.setProperty('--mx', '0px'); el.style.setProperty('--my', '0px'); });
+      });
+    }
+
+    const spy = [...document.querySelectorAll('.nav nav a')].map(a => ({ a, s: document.querySelector(a.getAttribute('href')) })).filter(x => x.s);
+    const toTop = document.createElement('button');
+    toTop.type = 'button'; toTop.className = 'to-top'; toTop.setAttribute('aria-label', 'Back to top'); toTop.textContent = '↑';
+    document.body.appendChild(toTop);
+    cleanups.push(() => toTop.remove());
+    toTop.addEventListener('click', () => lenis ? lenis.scrollTo(0) : scrollTo({ top: 0, behavior: 'smooth' }));
+    let spyTick = false;
+    const spyFrame = () => {
+      spyTick = false;
+      const mid = innerHeight * .4;
+      spy.forEach(({ a, s }) => { const r = s.getBoundingClientRect(); a.classList.toggle('on', r.top <= mid && r.bottom > mid); });
+      toTop.classList.toggle('show', scrollY > innerHeight * .8);
+    };
+    addEventListener('scroll', () => { if (!spyTick) { spyTick = true; requestAnimationFrame(spyFrame); } }, { passive: true });
+    spyFrame();
+  }
   } finally {
     EventTarget.prototype.addEventListener = nativeAdd;
   }
@@ -460,6 +519,7 @@ export function startExperience(): () => void {
     observers.forEach((o) => o.disconnect());
     timers.forEach((t) => clearTimeout(t));
     cancelAnimationFrame(raf);
+    cleanups.forEach((f) => f());
     lenis?.destroy();
     root.classList.remove("motion");
   };

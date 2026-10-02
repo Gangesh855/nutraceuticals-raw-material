@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Alegreya, Cormorant_Garamond } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../design-system/src/styles.css";
 
-// Display: Cormorant Garamond. Body and UI: Alegreya. (Typefaces from the brand palette sheet.)
-const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600", "700"], style: ["normal", "italic"], variable: "--font-display", display: "swap" });
-const body = Alegreya({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-body", display: "swap" });
+// One family throughout: Inter (variable, with italics). Display, body and label styles all derive from it.
+const inter = Inter({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-sans", display: "swap" });
 
 const DESCRIPTION =
   "GK Botanical manufactures HPLC-standardized botanical extracts for nutraceutical, beverage, food, personal care and animal health brands.";
@@ -20,7 +19,7 @@ export const viewport: Viewport = { themeColor: "#102D26", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body>{children}</body>
     </html>
   );

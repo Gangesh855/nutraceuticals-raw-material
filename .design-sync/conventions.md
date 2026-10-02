@@ -1,6 +1,6 @@
 ## GK Botanical conventions
 
-**One dark world.** The brand is a deep-green page with warm paper text and a single gold accent. `styles.css` already sets `html`/`body` to `var(--night)` with `var(--vellum)` text, so do not add a light page background. Fonts are loaded for you: Cormorant Garamond for headings (`var(--f-display)`) and Alegreya for everything else (`var(--f-body)`). Never set another font family.
+**One dark world.** The brand is a deep-green page with warm paper text and a single gold accent. `styles.css` already sets `html`/`body` to `var(--night)` with `var(--vellum)` text, so do not add a light page background. Inter is the only typeface and is loaded for you (`var(--f-display)`, `var(--f-body)` and `var(--f-mono)` all resolve to it; headings use weight 600, wordmark 800). Never set another font family.
 
 **No provider needed.** Components are plain React, styled by global class names that ship in `styles.css`. Mount them anywhere; no wrapper or theme provider.
 
@@ -30,3 +30,5 @@ const { Eyebrow, Button, TextLink, Facts } = window.GKBotanical;
   </div>
 </div></section>
 ```
+
+**Motion.** The page script adds scroll reveals, count-up figures and hover effects; components themselves are static, so keep your own animation to opacity/translate transitions with `var(--ease)` and respect `prefers-reduced-motion`.
