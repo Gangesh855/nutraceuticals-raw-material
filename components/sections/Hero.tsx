@@ -15,6 +15,7 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), { ssr: f
 const SLIDE_SLUGS = ["moringa", "ashwagandha", "turmeric-curcumin", "bacopa", "ginger", "boswellia"];
 const SLIDES = SLIDE_SLUGS.map((s) => PRODUCTS.find((p) => p.slug === s)!);
 const WORDS = ["Pure", "Botanicals,", "Precision", "Manufacturing."];
+const SECTORS = ["Pharmaceuticals", "Nutraceuticals", "Cosmetics", "Food & Beverages"];
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Hero() {
@@ -81,10 +82,24 @@ export default function Hero() {
     <section id="top" className="relative isolate flex min-h-[100svh] items-end overflow-hidden section pb-16 pt-[22rem] md:items-center md:pb-0 md:pt-28">
       <div className="absolute inset-0 -z-20"><HeroBackdrop slides={SLIDES} index={0} /></div>
 
-      {/* The finished hero: a calm sage panel with soft light, rounded at the bottom */}
-      <motion.div aria-hidden className="absolute inset-x-0 top-0 bottom-0 -z-10 rounded-b-[2rem] md:rounded-b-[3rem]"
+      {/* The finished hero: a sage panel that opens like an iris from the capsule, with a soft out-of-focus botanical behind it */}
+      <motion.div aria-hidden className="absolute inset-x-0 top-0 bottom-0 -z-10 overflow-hidden rounded-b-[2rem] md:rounded-b-[3rem]"
         style={{ background: "radial-gradient(70% 80% at 62% 38%, #b9c0b8 0%, #a7aea6 55%, #98a097 100%)" }}
-        initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ duration: 1.6, ease: "easeInOut" }} />
+        initial={{ clipPath: "circle(0% at 68% 50%)" }} animate={{ clipPath: shown ? "circle(150% at 68% 50%)" : "circle(0% at 68% 50%)" }} transition={{ duration: 2.4, ease: [0.65, 0, 0.2, 1] }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/moringa.webp" alt="" className="kb absolute inset-0 h-full w-full scale-110 object-cover opacity-[.15] mix-blend-multiply blur-[14px]" />
+        <div className="sun-shafts absolute inset-0 opacity-60 mix-blend-soft-light" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgba(26,36,28,.38)_100%)]" />
+        {/* one slow sweep of light as the hero lands */}
+        <motion.div className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          initial={{ x: "-40%" }} animate={{ x: shown ? "460%" : "-40%" }} transition={{ duration: 3.2, delay: 1.2, ease: "easeInOut" }} />
+      </motion.div>
+
+      {/* Cinematic letterbox: bars part as the opening plays and fully clear when the headline arrives */}
+      {intro && <>
+        <motion.div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[35] bg-black" initial={{ height: "11vh" }} animate={{ height: shown ? 0 : "7vh" }} transition={{ duration: shown ? 1.6 : 6, ease: "easeInOut" }} />
+        <motion.div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-[35] bg-black" initial={{ height: "11vh" }} animate={{ height: shown ? 0 : "7vh" }} transition={{ duration: shown ? 1.6 : 6, ease: "easeInOut" }} />
+      </>}
 
       {/* Opening sequence: close-ups of materials being processed (lab look) */}
       {intro && <HeroIntro seq={seq} />}
@@ -108,12 +123,15 @@ export default function Hero() {
           ))}
         </h1>
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 20 }} transition={{ delay: shown ? 0.7 : 0, duration: 1 }} className="mt-5 max-w-md text-[15px] leading-relaxed text-white/80">
-          Standardised extracts. Full traceability. Compliance built into every batch — for the world&apos;s leading nutraceutical brands.
+          We produce concentrated plant-derived ingredients used in pharmaceuticals, nutraceuticals, cosmetics, and food &amp; beverages — standardised, traceable, compliant.
         </motion.p>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: shown ? 1 : 0 }} transition={{ delay: shown ? 1 : 0, duration: 1 }} className={`mt-8 flex flex-wrap items-center gap-3 ${shown ? "" : "pointer-events-none"}`}>
           <a href="/#products" className="rounded-full bg-white px-6 py-3 text-sm font-medium text-[#1f2a1f] transition-transform hover:scale-[1.03]">Explore extracts</a>
           <a href="/#manufacturing" className="rounded-full px-5 py-3 text-sm font-medium text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline">See the process →</a>
         </motion.div>
+        <motion.ul aria-label="Industries we serve" initial={{ opacity: 0, y: 12 }} animate={{ opacity: shown ? 1 : 0, y: shown ? 0 : 12 }} transition={{ delay: shown ? 1.3 : 0, duration: 1 }} className="mt-8 flex flex-wrap gap-2">
+          {SECTORS.map((x) => <li key={x} className="rounded-full border border-white/35 px-3 py-1 text-[11px] font-medium tracking-wide text-white/85">{x}</li>)}
+        </motion.ul>
       </div>
 
       {intro && (
