@@ -89,6 +89,29 @@ function Contents({ seq }: { seq: React.MutableRefObject<Seq> }) {
   );
 }
 
+/** A soft plume of extract powder that lifts out of the open capsule while it fills, then fades as the cap closes. */
+function Powder({ seq }: { seq: React.MutableRefObject<Seq> }) {
+  const mat = useRef<THREE.PointsMaterial>(null);
+  const N = 70;
+  const { geo, seed } = useMemo(() => {
+    const seed = Array.from({ length: N }, () => ({ a: Math.random() * 6.28, r: Math.random() * 0.3, v: 0.25 + Math.random() * 0.45, o: Math.random() }));
+    const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(new Float32Array(N * 3), 3));
+    return { geo: g, seed };
+  }, []);
+  useFrame((state) => {
+    const s = seq.current, t = state.clock.elapsedTime;
+    const on = Math.min(1, Math.max(0, (s.fill - 0.04) / 0.1)) * (1 - Math.min(1, Math.max(0, (s.fill - 0.5) / 0.2)));
+    if (mat.current) mat.current.opacity = on * 0.45;
+    const pos = geo.attributes.position as THREE.BufferAttribute;
+    seed.forEach((d, i) => {
+      const k = (t * d.v * 0.35 + d.o) % 1; // 0 at the mouth → 1 at the top of the plume
+      pos.setXYZ(i, Math.cos(d.a + t * 0.2) * (d.r + k * 0.35), 1.0 + k * 1.1, Math.sin(d.a + t * 0.2) * (d.r + k * 0.35));
+    });
+    pos.needsUpdate = true;
+  });
+  return <points geometry={geo} renderOrder={4}><pointsMaterial ref={mat} color="#f3e6b0" size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} /></points>;
+}
+
 /** Thin dotted orbit rings around the finished capsule. */
 function OrbitRings({ seq }: { seq: React.MutableRefObject<Seq> }) {
   const g = useRef<THREE.Group>(null);
@@ -128,7 +151,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
 
   const { shellA, shellB, liquid, liqMat, shellMat, haloMat } = useMemo(() => {
     const shellMat = new THREE.MeshPhysicalMaterial({
-      color: "#eef8f2", transparent: true, opacity: 0.3, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
+      color: "#eef8f2", transparent: true, opacity: 0.4, roughness: 0.16, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08,
       envMapIntensity: 2.4, depthWrite: false, side: THREE.DoubleSide,
     });
     const liqMat = new THREE.ShaderMaterial({
@@ -148,7 +171,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
     const g = group.current, sp = spin.current; if (!g || !sp) return;
     const s = seq.current, t = state.clock.elapsedTime;
     const k = Math.min(1, Math.max(0, (s.fill - 0.42) / 0.28)); // closes between 42 % and 70 % full
-    if (cap.current) cap.current.position.y = 0.95 * (1 - k * k * (3 - 2 * k));
+    if (cap.current) { const lift = 1 - k * k * (3 - 2 * k); cap.current.position.y = 1.05 * lift; cap.current.rotation.z = 0.2 * lift * Math.sin(t * 0.8 + 1); }
     pointer.current.x += (state.pointer.x - pointer.current.x) * 0.05;
     pointer.current.y += (state.pointer.y - pointer.current.y) * 0.05;
 
@@ -170,7 +193,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
     const u = liqMat.uniforms;
     u.uBottom.value = bottom; u.uHeight.value = height; u.uLevel.value = bottom + s.fill * height * 1.03 - (s.fill <= 0 ? 1 : 0);
     u.uTime.value = t; u.uGlow.value = s.glow;
-    shellMat.opacity = 0.3 * s.capsuleIn;
+    shellMat.opacity = 0.4 * s.capsuleIn;
     // illumination
     if (halo.current) { halo.current.scale.setScalar(5.2 + s.glow * 1.4 + Math.sin(t * 2) * 0.08 * s.glow); haloMat.opacity = Math.min(1, s.glow) * 0.55 * s.capsuleIn; }
     if (light.current) light.current.intensity = 1 + s.glow * 26;
@@ -184,6 +207,7 @@ export default function BigCapsule({ seq, mouth }: Props) {
       <group ref={spin}>
         <mesh geometry={liquid} material={liqMat} renderOrder={1} />
         <Contents seq={seq} />
+        <Powder seq={seq} />
         {/* seam where the two halves meet */}
         <mesh rotation={[Math.PI / 2, 0, 0]} renderOrder={3}>
           <torusGeometry args={[R * 1.035, 0.013, 12, 72]} />
