@@ -1,0 +1,66 @@
+{
+  "pkg": "@gk/botanical-ui",
+  "globalName": "GKBotanical",
+  "shape": "package",
+  "buildCmd": "npm run build --prefix design-system",
+  "srcDir": "src",
+  "cssEntry": "dist/styles.css",
+  "extraFonts": [
+    "../node_modules/@fontsource/cormorant-garamond/latin-400.css",
+    "../node_modules/@fontsource/cormorant-garamond/latin-400-italic.css",
+    "../node_modules/@fontsource/cormorant-garamond/latin-500.css",
+    "../node_modules/@fontsource/cormorant-garamond/latin-600.css",
+    "../node_modules/@fontsource/cormorant-garamond/latin-700.css",
+    "../node_modules/@fontsource/alegreya/latin-400.css",
+    "../node_modules/@fontsource/alegreya/latin-400-italic.css",
+    "../node_modules/@fontsource/alegreya/latin-500.css",
+    "../node_modules/@fontsource/alegreya/latin-700.css"
+  ],
+  "overrides": {
+    "CertList": {
+      "cardMode": "column"
+    },
+    "CustomSpecialtyCard": {
+      "cardMode": "column"
+    },
+    "Eyebrow": {
+      "cardMode": "column"
+    },
+    "ProcessStage": {
+      "cardMode": "column"
+    },
+    "QualityTest": {
+      "cardMode": "column"
+    },
+    "SpecimenCard": {
+      "cardMode": "column"
+    },
+    "SiteHeader": {
+      "cardMode": "single",
+      "primaryStory": "Default",
+      "viewport": "1100x140"
+    },
+    "Button": {
+      "cardMode": "column"
+    },
+    "TextLink": {
+      "cardMode": "column"
+    },
+    "Vial": {
+      "cardMode": "column"
+    },
+    "Chip": {
+      "cardMode": "column"
+    },
+    "Facts": {
+      "cardMode": "column"
+    },
+    "FormField": {
+      "cardMode": "column"
+    },
+    "CertificateOfAnalysis": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
